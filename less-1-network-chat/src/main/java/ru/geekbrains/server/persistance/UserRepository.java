@@ -1,5 +1,7 @@
 package ru.geekbrains.server.persistance;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.geekbrains.server.User;
 
 import javax.sql.DataSource;
@@ -7,10 +9,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class UserRepository {
 
     private final Connection conn;
 
+    @Autowired
     public UserRepository(DataSource dataSource) throws SQLException {
         this(dataSource.getConnection());
     }
