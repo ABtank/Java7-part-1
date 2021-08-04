@@ -48,10 +48,7 @@ public class ChatServer {
 //        ChatServer chatServer = new ChatServer(authService);
 //        chatServer.start(7777);
 //    }
-    @Autowired
-    public ChatServer(AuthService authService) {
-        this.authService = authService;
-    }
+
 
     public void start(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
