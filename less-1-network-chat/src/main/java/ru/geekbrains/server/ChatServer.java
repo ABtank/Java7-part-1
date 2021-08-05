@@ -26,6 +26,9 @@ public class ChatServer {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private SpringConfig springConfig;
+
     private Map<String, ClientHandler> clientHandlerMap = Collections.synchronizedMap(new HashMap<>());
 
 //    public static void main(String[] args) {
@@ -131,7 +134,7 @@ public class ChatServer {
 
     public void subscribe(String login, Socket socket) throws IOException {
         // TODO Проверить, подключен ли уже пользователь. Если да, то отправить клиенту ошибку
-        clientHandlerMap.put(login, new ClientHandler(login, socket, this));
+        clientHandlerMap.put(login, springConfig.clientHandler(login,socket));
         sendUserConnectedMessage(login);
     }
 
