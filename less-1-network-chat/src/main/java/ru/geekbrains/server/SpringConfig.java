@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 
 @Configuration
+@Import(NewSpringConfig.class)  // импорт еще одной конфигурации
 //@ComponentScan(basePackages = "ru.geekbrains.server")
 @PropertySource(value="classpath:application.yaml") // в папке target
 @PropertySource(value="classpath:application.properties") // в папке target
