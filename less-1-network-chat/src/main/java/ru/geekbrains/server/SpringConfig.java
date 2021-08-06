@@ -1,10 +1,9 @@
 package ru.geekbrains.server;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ru.geekbrains.server.auth.AuthService;
 import ru.geekbrains.server.auth.AuthServiceJdbcImpl;
@@ -17,9 +16,37 @@ import java.sql.SQLException;
 
 @Configuration
 //@ComponentScan(basePackages = "ru.geekbrains.server")
+@PropertySource(value="classpath:application.yaml") // в папке target
+@PropertySource(value="classpath:application.properties") // в папке target
 public class SpringConfig {
+
+//    для application.properties
+//    @Value("${database.class}")
+//    private String driverClassName;
+//    @Value("${database.url}")
+//    private String databaseUrl;
+//    @Value("${database.username}")
+//    private String username;
+//    @Value("${database.password}")
+//    private String password;
+
+//    Для application.yaml
+    @Value("${class}")
+    private String driverClassName;
+    @Value("${url}")
+    private String databaseUrl;
+    @Value("${login}")
+    private String username;
+    @Value("${password}")
+    private String password;
+
+    @Value("${username}") // имя username подставляется не то
+    private String user;
+
     @Bean
     public ChatServer chatServer (){
+        System.out.println(driverClassName+" \n"+databaseUrl+" \n"+username+" \n"+password);
+        System.out.println("username="+user);
         return new ChatServer();
     }
 
@@ -36,10 +63,10 @@ public class SpringConfig {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUsername("root");
-        ds.setPassword("12345678");
-        ds.setUrl("jdbc:mysql://localhost:3306/network_chat?&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
+        ds.setDriverClassName(driverClassName);
+        ds.setUsername(username);
+        ds.setPassword(password);
+        ds.setUrl(databaseUrl);
         return ds;
     }
 
