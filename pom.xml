@@ -4,17 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>ru.abtank</groupId>
     <artifactId>Java7-part-1</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>less-1-network-chat</module>
+        <module>less-2-spring-mvc</module>
     </modules>
 
     <properties>
-        <java.version>12</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <spring.version>5.2.9.RELEASE</spring.version>
     </properties>
+
 
 </project>
