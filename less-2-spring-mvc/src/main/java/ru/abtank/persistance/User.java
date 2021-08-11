@@ -14,9 +14,6 @@ public class User {
         this.email = email;
     }
 
-    public User() {
-
-    }
 
     public int getId() {
         return id;
@@ -32,5 +29,15 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

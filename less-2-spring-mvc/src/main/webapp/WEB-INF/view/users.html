@@ -74,8 +74,12 @@
                         <a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a>
                     </td>
                     <td scope="row">
-                        <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i class="bi bi-pencil-square"></i></a>
-                        <a class="btn btn-danger" href=""><i class="bi bi-trash"></i> </a>
+                        <div class="btn-group me-2" role="group" aria-label="First group">
+                            <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/user/{id}/delete (id=*{user.id})}" th:method="delete">
+                                <button class="btn btn-danger" type="Submit" ><i class="bi bi-trash"></i> </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
