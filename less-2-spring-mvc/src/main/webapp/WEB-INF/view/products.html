@@ -53,7 +53,7 @@
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <a class="btn btn-primary" th:href="@{/user/create}">Add User</a>
+            <a class="btn btn-primary" th:href="@{/product/create}">Add product</a>
         </div>
 
         <div class="col-12">
@@ -67,16 +67,15 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
-                    <th scope="row" th:text="*{user.id}">1</th>
-                    <td scope="row" th:text="*{user.login}">User Login</td>
-                    <td scope="row" >
-                        <a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a>
+                <tr th:each="product : ${products}">
+                    <th scope="row" th:text="*{product.id}">1</th>
+                    <td scope="row" th:text="*{product.name}">Product name</td>
+                    <td scope="row" th:text="*{product.price}">Price</a>
                     </td>
                     <td scope="row">
                         <div class="btn-group me-2" role="group" aria-label="First group">
-                            <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i class="bi bi-pencil-square"></i></a>
-                            <form th:action="@{/user/{id}/delete (id=*{user.id})}" th:method="delete">
+                            <a class="btn btn-success" th:href="@{/product/{id}(id = ${product.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/product/{id}/delete (id=*{product.id})}" th:method="delete">
                                 <button class="btn btn-danger" type="Submit" ><i class="bi bi-trash"></i> </button>
                             </form>
                         </div>
