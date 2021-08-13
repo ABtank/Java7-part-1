@@ -27,43 +27,46 @@ public class UserController {
     public String allUsers(Model model) throws SQLException {
         List<User> allUser = userRepository.getAllUsers();
         model.addAttribute("users", allUser);
-        LOGGER.info("GET ALL USERS: "+allUser.stream()
+        model.addAttribute("nav_selected", "nav_users");
+        LOGGER.info("GET ALL USERS: " + allUser.stream()
                 .map(User::getLogin)
                 .collect(Collectors.joining(", ")));
-    return "users"; // возврат названия html файла из view (представлений)
+        return "users"; // возврат названия html файла из view (представлений)
     }
 
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Long id, Model model) throws SQLException {
-            User user = userRepository.findById(id);
-        LOGGER.info("EDIT USER: "+user.toString());
-            model.addAttribute("user", user);
+        User user = userRepository.findById(id);
+        LOGGER.info("EDIT USER: " + user.toString());
+        model.addAttribute("user", user);
+        model.addAttribute("nav_selected", "nav_users");
         return "user";
     }
 
     @PostMapping("/update")
     public String updateUser(User user) throws SQLException {
-        if(user.getId() > 0) {
-            LOGGER.info("UPDATE USER: "+user.toString());
+        if (user.getId() > 0) {
+            LOGGER.info("UPDATE USER: " + user.toString());
             userRepository.update(user);
-        } else{
-            LOGGER.info("INSERT USER: "+user.toString());
+        } else {
+            LOGGER.info("INSERT USER: " + user.toString());
             userRepository.insert(user);
         }
         return "redirect:/user";
     }
 
     @GetMapping("/create")
-    public  String createUser (Model model){
-        User user = new User(0,"","","");
-        LOGGER.info("CREATE USER: "+user.toString());
+    public String createUser(Model model) {
+        User user = new User(0, "", "", "");
+        LOGGER.info("CREATE USER: " + user.toString());
         model.addAttribute("user", user);
+        model.addAttribute("nav_selected", "ADD_NEW");
         return "user";
     }
 
-    @DeleteMapping ("{id}/delete")
-    public String deleteUser(@PathVariable("id") Long id){
-        LOGGER.info("DELETE USER id="+id +" "+ userRepository.deleteById(id));
+    @DeleteMapping("{id}/delete")
+    public String deleteUser(@PathVariable("id") Long id) {
+        LOGGER.info("DELETE USER id=" + id + " " + userRepository.deleteById(id));
         return "redirect:/user";
     }
 

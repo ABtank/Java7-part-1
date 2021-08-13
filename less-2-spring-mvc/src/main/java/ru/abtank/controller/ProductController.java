@@ -27,43 +27,46 @@ public class ProductController {
     public String allProducts(Model model) throws SQLException {
         List<Product> allProduct = productRepository.getAllProducts();
         model.addAttribute("products", allProduct);
-        LOGGER.info("GET ALL PRODUCTS: "+allProduct.stream()
+        model.addAttribute("nav_selected", "nav_products");
+        LOGGER.info("GET ALL PRODUCTS: " + allProduct.stream()
                 .map(Product::getName)
                 .collect(Collectors.joining(", ")));
-    return "products"; // возврат названия html файла из view (представлений)
+        return "products"; // возврат названия html файла из view (представлений)
     }
 
     @GetMapping("/{id}")
     public String editProduct(@PathVariable("id") Long id, Model model) throws SQLException {
-            Product product = productRepository.findById(id);
-        LOGGER.info("EDIT PRODUCT: "+product.toString());
-            model.addAttribute("product", product);
+        Product product = productRepository.findById(id);
+        LOGGER.info("EDIT PRODUCT: " + product.toString());
+        model.addAttribute("nav_selected", "nav_products");
+        model.addAttribute("product", product);
         return "product";
     }
 
     @PostMapping("/update")
     public String updateProduct(Product product) throws SQLException {
-        if(product.getId() > 0) {
-            LOGGER.info("UPDATE PRODUCT: "+product.toString());
+        if (product.getId() > 0) {
+            LOGGER.info("UPDATE PRODUCT: " + product.toString());
             productRepository.update(product);
-        } else{
-            LOGGER.info("INSERT PRODUCT: "+product.toString());
+        } else {
+            LOGGER.info("INSERT PRODUCT: " + product.toString());
             productRepository.insert(product);
         }
         return "redirect:/product";
     }
 
     @GetMapping("/create")
-    public  String createProduct (Model model){
-        Product product = new Product(0,"","","");
-        LOGGER.info("CREATE PRODUCT: "+product.toString());
+    public String createProduct(Model model) {
+        Product product = new Product(0, "", "", "");
+        LOGGER.info("CREATE PRODUCT: " + product.toString());
+        model.addAttribute("nav_selected", "ADD_NEW");
         model.addAttribute("product", product);
         return "product";
     }
 
-    @DeleteMapping ("{id}/delete")
-    public String deleteProduct(@PathVariable("id") Long id){
-        LOGGER.info("DELETE PRODUCT id="+id +" "+ productRepository.deleteById(id));
+    @DeleteMapping("{id}/delete")
+    public String deleteProduct(@PathVariable("id") Long id) {
+        LOGGER.info("DELETE PRODUCT id=" + id + " " + productRepository.deleteById(id));
         return "redirect:/product";
     }
 
