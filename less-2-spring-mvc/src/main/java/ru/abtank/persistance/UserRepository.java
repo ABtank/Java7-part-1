@@ -70,10 +70,10 @@ public class UserRepository {
         return new User(-1, "", "","");
     }
 
-    public boolean deleteById(Long id)  {
+    public boolean deleteById(Integer id)  {
         try (PreparedStatement stmt = conn.prepareStatement(
                 "DELETE from users where id = ?")) {
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
             stmt.execute();
             return true;
         } catch (SQLException exception){
