@@ -58,6 +58,7 @@ public class ProductController {
     @GetMapping("/create")
     public String createProduct(Model model) {
         Product product = new Product(0, "", "", "");
+//        Product product = new Product();
         LOGGER.info("CREATE PRODUCT: " + product.toString());
         model.addAttribute("nav_selected", "ADD_NEW");
         model.addAttribute("product", product);

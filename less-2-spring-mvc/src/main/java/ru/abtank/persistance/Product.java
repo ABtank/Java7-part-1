@@ -2,19 +2,21 @@ package ru.abtank.persistance;
 
 public class Product {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
     private String price;
 
-    public Product(int id, String name, String description, String price) {
+    public Product(Integer id, String name, String description, String price) {
         this.id = id;
         this.description = description;
         this.name = name;
         this.price = price;
     }
 
-    public int getId() {
+//    public Product(){}
+
+    public Integer getId() {
         return id;
     }
 

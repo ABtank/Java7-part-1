@@ -75,6 +75,7 @@ public class UserController {
     @GetMapping("/create")
     public String createUser(Model model) {
         User user = new User(0, "", "", "");
+//        User user = new User();
         LOGGER.info("CREATE USER: " + user.toString());
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "ADD_NEW");

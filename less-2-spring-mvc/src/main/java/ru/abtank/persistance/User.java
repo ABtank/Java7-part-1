@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 
 public class User {
 
-    private int id;
+    private Integer id;
     @NotBlank //валидация
     private String login;
     @NotBlank //валидация
@@ -15,15 +15,16 @@ public class User {
     @NotBlank
     private String email;
 
-    public User(int id, String login, String password, String email) {
+    public User(Integer id, String login, String password, String email) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.email = email;
     }
 
+//    public User(){}
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -41,26 +42,6 @@ public class User {
 
     public String getMatchingPassword() {
         return matchingPassword;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setMatchingPassword(String matchingPassword) {
-        this.matchingPassword = matchingPassword;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     @Override
