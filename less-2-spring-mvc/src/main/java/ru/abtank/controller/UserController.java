@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.abtank.persistance.User;
-import ru.abtank.persistance.UserRepository;
+import ru.abtank.persist.entity.User;
+import ru.abtank.persist.UserRepository;
 
 import javax.validation.Valid;
 import java.sql.SQLException;

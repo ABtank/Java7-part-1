@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.abtank.persistance.Product;
-import ru.abtank.persistance.ProductRepository;
+import ru.abtank.persist.entity.Product;
+import ru.abtank.persist.ProductRepository;
 
 import java.sql.SQLException;
 import java.util.List;

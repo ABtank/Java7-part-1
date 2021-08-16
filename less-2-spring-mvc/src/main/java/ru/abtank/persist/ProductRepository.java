@@ -1,7 +1,8 @@
-package ru.abtank.persistance;
+package ru.abtank.persist;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.abtank.persist.entity.Product;
 
 import javax.sql.DataSource;
 import java.sql.*;

@@ -1,4 +1,4 @@
-package ru.abtank.persistance;
+package ru.abtank.persist.entity;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

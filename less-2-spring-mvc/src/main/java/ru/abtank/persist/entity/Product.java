@@ -1,4 +1,4 @@
-package ru.abtank.persistance;
+package ru.abtank.persist.entity;
 
 public class Product {
 
