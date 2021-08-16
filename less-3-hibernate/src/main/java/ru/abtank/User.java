@@ -20,6 +20,9 @@ public class User {
     )
     List<Contact> contactList;
 
+    @OneToMany(mappedBy = "user")
+    List<Order> orders;
+
 //    private String matchingPassword;
 
     @Column

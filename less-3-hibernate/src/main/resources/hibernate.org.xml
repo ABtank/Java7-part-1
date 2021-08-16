@@ -22,6 +22,9 @@
 
         <mapping class="ru.abtank.User"/>
         <mapping class="ru.abtank.Contact"/>
+        <mapping class="ru.abtank.Order"/>
+        <mapping class="ru.abtank.OrderItem"/>
+        <mapping class="ru.abtank.Product"/>
 
     </session-factory>
 </hibernate-configuration>
