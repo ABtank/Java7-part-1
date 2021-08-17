@@ -1,6 +1,11 @@
 package ru.abtank.persist.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 @Table (name = "products")
@@ -15,6 +20,15 @@ public class Product {
     private String description;
     @Column
     private String price;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_date")
+    private Date modifyDate;
 
     public Product(Integer id, String name, String description, String price) {
         this.id = id;
@@ -57,12 +71,31 @@ public class Product {
         this.price = price;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price='" + price + '\'' +
+                ", createDate=" + new SimpleDateFormat("dd MMMM yyyy").format(createDate) +
+                ", modifyDate=" + new SimpleDateFormat("dd MMMM yyyy").format(modifyDate) +
                 '}';
     }
 }
