@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.abtank.persist.entity.User;
-import ru.abtank.persist.UserRepository;
+import ru.abtank.persist.repo.UserRepository;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
@@ -29,7 +29,7 @@ public class UserController {
     //весь список юзеров
     @GetMapping
     public String allUsers(Model model) throws SQLException {
-        List<User> allUser = userRepository.getAllUsers();
+        List<User> allUser = userRepository.findAll();
         model.addAttribute("users", allUser);
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
@@ -40,8 +40,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String editUser(@PathVariable("id") Long id, Model model) throws SQLException {
-        User user = userRepository.findById(id);
+    public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
+        User user = userRepository.findById(id).get();
         LOGGER.info("EDIT USER: " + user.toString());
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "nav_users");
@@ -50,32 +50,21 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) throws SQLException {
-
-        if(bindingResult.hasErrors()){
+        LOGGER.info("START UPDATE OR INSERT USER: " + user.toString());
+        if (bindingResult.hasErrors()) {
             return "user";
         }
-        if(!user.getPassword().equals(user.getMatchingPassword())) {
-                bindingResult.rejectValue("password","error.password","пароль не совпал");
+        if (!user.getPassword().equals(user.getMatchingPassword())) {
+            bindingResult.rejectValue("password", "error.password", "пароль не совпал");
             return "user";
         }
-        if (user.getId() > 0) {
-            LOGGER.info("UPDATE USER: " + user.toString());
-            userRepository.update(user);
-        } else {
-            if(userRepository.findByLogin(user.getLogin()).getId() > 0){
-                model.addAttribute("login_exist", true);
-                return "user";
-            }
-            LOGGER.info("INSERT USER: " + user.toString());
-            userRepository.insert(user);
-        }
+        userRepository.save(user);
         return "redirect:/user";
     }
 
     @GetMapping("/create")
     public String createUser(Model model) {
-        User user = new User(0, "", "", "");
-//        User user = new User();
+        User user = new User();
         LOGGER.info("CREATE USER: " + user.toString());
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "ADD_NEW");
@@ -84,11 +73,12 @@ public class UserController {
 
     @DeleteMapping("{id}/delete")
     public String deleteUser(@PathVariable("id") Integer id) {
-        LOGGER.info("DELETE USER id=" + id + " " + userRepository.deleteById(id));
+        LOGGER.info("DELETE USER id=" + id );
+        userRepository.deleteById(id);
         return "redirect:/user";
     }
 
-    public String getDate(){
+    public String getDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
         Calendar cal = Calendar.getInstance();
         return dateFormat.format(cal.getTime());

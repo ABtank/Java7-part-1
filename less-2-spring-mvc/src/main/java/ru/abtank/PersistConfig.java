@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 //import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import ru.abtank.persist.repo.ProductRepository;
+import ru.abtank.persist.repo.UserRepository;
 //import org.springframework.orm.jpa.JpaTransactionManager;
 //import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 //import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -20,6 +23,7 @@ import java.util.Properties;
 
 @Configuration
 @PropertySource("classpath:application.properties")
+@EnableJpaRepositories("ru.abtank.persist.repo") //указываем где будут сущности
 public class PersistConfig {
 
     @Value("${database.driver.class}")
@@ -74,7 +78,7 @@ public class PersistConfig {
         jpaProperties.put("hibernate.hbm2ddl.auto", "update");
 
         // Указание диалекта конкретной базы данных
-        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
 
         // Указание максимальной глубины связи
         jpaProperties.put("hibernate.max_fetch_depth", 3);
