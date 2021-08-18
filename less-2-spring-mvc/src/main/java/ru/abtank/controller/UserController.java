@@ -13,6 +13,7 @@ import ru.abtank.persist.repo.UserRepository;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,8 +29,26 @@ public class UserController {
 
     //весь список юзеров
     @GetMapping
-    public String allUsers(Model model) throws SQLException {
-        List<User> allUser = userRepository.findAll();
+    public String allUsers(Model model,
+                           @RequestParam(value = "check_login_filter", required = false) Boolean check_login_filter,
+                           @RequestParam(value = "check_email_filter", required = false) Boolean check_email_filter,
+                           @RequestParam(value = "login_filter",required = false) String login_filter,
+                           @RequestParam(value = "email_filter",required = false) String email_filter
+    ) {
+        List<User> allUser = new ArrayList<>();
+        if (check_login_filter == null && check_email_filter == null) {
+            allUser = userRepository.findAll();
+        } else if ((check_login_filter != null && !login_filter.isEmpty())
+                && (check_email_filter != null && !email_filter.isEmpty())) {
+            allUser.addAll(userRepository.findByEmailLikeAndLoginLike("%" + email_filter + "%", "%" + login_filter + "%"));
+        } else {
+            if (check_login_filter != null && !login_filter.isEmpty()) {
+                allUser.addAll(userRepository.findByLoginLike("%" + login_filter + "%"));
+            }
+            if (check_email_filter != null && !email_filter.isEmpty()) {
+                allUser.addAll(userRepository.findByEmailLike("%" + email_filter + "%"));
+            }
+        }
         model.addAttribute("users", allUser);
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
@@ -73,7 +92,7 @@ public class UserController {
 
     @DeleteMapping("{id}/delete")
     public String deleteUser(@PathVariable("id") Integer id) {
-        LOGGER.info("DELETE USER id=" + id );
+        LOGGER.info("DELETE USER id=" + id);
         userRepository.deleteById(id);
         return "redirect:/user";
     }

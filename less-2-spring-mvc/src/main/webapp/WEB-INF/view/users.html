@@ -6,7 +6,34 @@
 
 <div class="container">
     <div class="row py-2">
-        <hr/>
+        <div class="col-4"  id="blok_filter">
+            <form th:method="get" class="border border-secondary rounded p-2">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox"
+                               name="check_login_filter" id="check_login_filter"
+                               th:value="${true}" th:checked="${param.check_login_filter}"
+                               aria-label="Checkbox for following text input">
+                    </div>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Login</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                           name="login_filter" id="login_filter" th:value="${param.login_filter}">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox"
+                               name="check_email_filter" id="check_email_filter"
+                               th:value="${true}" th:checked="${param.check_email_filter}"
+                               aria-label="Checkbox for following text input">
+                    </div>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                           name="email_filter" id="email_filter" th:value="${param.email_filter}">
+                </div>
+                <button class="btn btn-success" type="submit">Filter</button>
+            </form>
+        </div>
+
         <div class="col-12">
             <table class="table table-bordered my-2">
                 <thead>
@@ -21,14 +48,15 @@
                 <tr th:each="user : ${users}">
                     <th scope="row" th:text="*{user.id}">1</th>
                     <td scope="row" th:text="*{user.login}">User Login</td>
-                    <td scope="row" >
+                    <td scope="row">
                         <a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a>
                     </td>
                     <td scope="row" class="text-center" style="width: 10px;">
                         <div class="btn-group me-2" role="group" aria-label="First group">
-                            <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <a class="btn btn-success" th:href="@{/user/{id}(id = ${user.id})}"><i
+                                    class="bi bi-pencil-square"></i></a>
                             <form th:action="@{/user/{id}/delete (id=*{user.id})}" th:method="delete">
-                                <button class="btn btn-danger" type="Submit" ><i class="bi bi-trash"></i> </button>
+                                <button class="btn btn-danger" type="Submit"><i class="bi bi-trash"></i></button>
                             </form>
                         </div>
                     </td>
