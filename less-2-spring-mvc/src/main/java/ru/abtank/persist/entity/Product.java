@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class Product {
     @Column
     private String description;
     @Column
-    private String price;
+    private BigDecimal price;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
@@ -30,7 +31,7 @@ public class Product {
     @Column(name = "modify_date")
     private Date modifyDate;
 
-    public Product(Integer id, String name, String description, String price) {
+    public Product(Integer id, String name, String description, BigDecimal price) {
         this.id = id;
         this.description = description;
         this.name = name;
@@ -63,11 +64,11 @@ public class Product {
         this.description = description;
     }
 
-    public String getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
