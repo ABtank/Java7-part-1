@@ -4,6 +4,10 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,7 @@ public class Main {
 //        Создание нового пользователя
         User user1 = new User(null, "alex1", "alex1", "alex1@bk.ru");
         User user2 = new User(null, "alex2", "alex2", "alex2@bk.ru");
-        User user3 = new User(null, "alex3", "alex3", "alex3@bk.ru");
+        User user3 = new User(null, "alex3", "alex3", null);
         User user4 = new User(null, "alex4", "alex4", "alex4@bk.ru");
 //        Открыли транзакцию
         em.getTransaction().begin();
@@ -144,13 +148,31 @@ public class Main {
         em.getTransaction().begin();
         users.clear();
         users = em.createQuery("FROM User", User.class).getResultList();
-        for (User user: users) {
+        for (User user : users) {
             List<Order> user_orders = em.createQuery("FROM Order WHERE user_id = :user_id", Order.class)
                     .setParameter("user_id", user.getId())
                     .getResultList();
-            System.out.println(user.getLogin()+" have orders:\n" + user_orders);
+            System.out.println(user.getLogin() + " have orders:\n" + user_orders);
         }
         em.getTransaction().commit();
+
+//пример запроса
+        em.createQuery("FROM User u WHERE u.login like '%3%' AND u.email is null", User.class).getResultList();
+//        билдер запроса
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+//        передаем класс которую будем запрашивать
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+//        что будет в FROM
+        Root<User> from = query.from(User.class);
+//        формируем WHERE
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.like(from.get("login"), "%3%"));
+        predicates.add(cb.isNull(from.get("email")));
+//        делаем запрос
+        CriteriaQuery<User> cq = query.select(from).where(predicates.toArray(new Predicate[0]));
+//        запускаем запрос
+        List<User> userList = em.createQuery(cq).getResultList();
+        System.out.println(userList);
 
         em.close();
 
