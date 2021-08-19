@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head :: head"></div>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div class="row py-2">
+        <div class="col-4"  id="blok_filter">
+            <form th:method="get" class="border border-secondary rounded p-2">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox"
+                               name="check_name_filter" id="check_name_filter"
+                               th:value="${true}" th:checked="${param.check_name_filter}"
+                               aria-label="Checkbox for following text input">
+                    </div>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">name</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                           name="name_filter" id="name_filter" th:value="${param.name_filter}">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox"
+                               name="check_price_min_filter" id="check_price_min_filter"
+                               th:value="${true}" th:checked="${param.check_price_min_filter}"
+                               aria-label="Checkbox for following text input">
+                    </div>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">price_min</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                           name="price_min_filter" id="price_min_filter" th:value="${param.price_min_filter}">
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox"
+                               name="check_price_max_filter" id="check_price_max_filter"
+                               th:value="${true}" th:checked="${param.check_price_max_filter}"
+                               aria-label="Checkbox for following text input">
+                    </div>
+                    <span class="input-group-text" id="inputGroup-sizing-sm">price_max</span>
+                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                           name="price_max_filter" id="price_max_filter" th:value="${param.price_max_filter}">
+                </div>
+                <button class="btn btn-success" type="submit">Filter</button>
+            </form>
+        </div>
+
+        <div class="col-12">
+            <table class="table table-bordered my-2 display" id="products" style="width:100%">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}">
+                    <th scope="row" th:text="*{product.id}">1</th>
+                    <td scope="row" th:text="*{product.name}">Product name</td>
+                    <td scope="row" th:text="*{product.price}">Price</a>
+                    </td>
+                    <td scope="row" class="text-center" style="width: 10px;">
+                        <div class="btn-group me-2" role="group" aria-label="First group">
+                            <a class="btn btn-success" th:href="@{/product/{id}(id = ${product.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/product/{id}/delete (id=*{product.id})}" th:method="delete">
+                                <button class="btn btn-danger" type="Submit" ><i class="bi bi-trash"></i> </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script th:replace="fragments/footer :: core_scripts"></script>
+<script>
+    $(function () {
+        $('#products').DataTable();
+    });
+</script>
+</body>
+</html>

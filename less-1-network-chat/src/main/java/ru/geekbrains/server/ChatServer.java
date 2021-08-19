@@ -1,5 +1,7 @@
 package ru.geekbrains.server;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.geekbrains.client.AuthException;
 import ru.geekbrains.client.TextMessage;
 import ru.geekbrains.server.auth.AuthService;
@@ -19,37 +21,39 @@ import java.util.*;
 import static ru.geekbrains.client.MessagePatterns.AUTH_FAIL_RESPONSE;
 import static ru.geekbrains.client.MessagePatterns.AUTH_SUCCESS_RESPONSE;
 
+@Component
 public class ChatServer {
 
+    @Autowired
     private AuthService authService;
+    @Autowired
+    private SpringConfig springConfig;
+
     private Map<String, ClientHandler> clientHandlerMap = Collections.synchronizedMap(new HashMap<>());
 
-    public static void main(String[] args) {
-        AuthService authService;
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/network_chat",
-                    "root", "12345678");
-            UserRepository userRepository = new UserRepository(conn);
-            if (userRepository.getAllUsers().size() == 0) {
-                userRepository.insert(new User(-1, "ivan", "123"));
-                userRepository.insert(new User(-1, "petr", "345"));
-                userRepository.insert(new User(-1, "julia", "789"));
-            }
-            authService = new AuthServiceJdbcImpl(userRepository);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return;
-        }
+//    public static void main(String[] args) {
+//        AuthService authService;
+//        try {
+//            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/network_chat",
+//                    "root", "12345678");
+//            UserRepository userRepository = new UserRepository(conn);
+//            if (userRepository.getAllUsers().size() == 0) {
+//                userRepository.insert(new User(-1, "ivan", "123"));
+//                userRepository.insert(new User(-1, "petr", "345"));
+//                userRepository.insert(new User(-1, "julia", "789"));
+//            }
+//            authService = new AuthServiceJdbcImpl(userRepository);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//
+//        ChatServer chatServer = new ChatServer(authService);
+//        chatServer.start(7777);
+//    }
 
-        ChatServer chatServer = new ChatServer(authService);
-        chatServer.start(7777);
-    }
 
-    public ChatServer(AuthService authService) {
-        this.authService = authService;
-    }
-
-    private void start(int port) {
+    public void start(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Server started!");
             while (true) {
@@ -130,7 +134,7 @@ public class ChatServer {
 
     public void subscribe(String login, Socket socket) throws IOException {
         // TODO Проверить, подключен ли уже пользователь. Если да, то отправить клиенту ошибку
-        clientHandlerMap.put(login, new ClientHandler(login, socket, this));
+        clientHandlerMap.put(login, springConfig.clientHandler(login,socket));
         sendUserConnectedMessage(login);
     }
 

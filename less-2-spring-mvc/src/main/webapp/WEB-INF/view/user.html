@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head :: head"></div>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div class="row py-2">
+        <div class="col-12">
+            <form th:action="@{/user/update}" method="post" th:object="${user}">
+                <input th:type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label>Login</label>
+                    <input type="text" class="form-control" th:field="*{login}" placeholder="Enter login">
+                    <small id="loginError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error
+                    </small>
+                    <small id="loginExist" class="form-text alert-danger"
+                           th:if="${login_exist}" th:text="*{login+' уже занят'}">loginExist
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" th:field="*{email}" placeholder="Enter email">
+                    <small id="emailError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Validation error
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" th:field="*{password}" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label>matchingPassword</label>
+                    <input type="password" class="form-control" th:field="*{matchingPassword}" placeholder="Confirm password">
+                    <small id="passwordError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Validation error</small>
+                </div>
+                <button type="Submit" class="btn btn-primary">Submit</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script th:replace="fragments/footer :: core_scripts"></script>
+</body>
+</html>
