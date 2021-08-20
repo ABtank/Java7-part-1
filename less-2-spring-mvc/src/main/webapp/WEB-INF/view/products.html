@@ -52,6 +52,7 @@
                     <th scope="col">Id</th>
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
+                    <th scope="col">Create/Update</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -59,7 +60,10 @@
                 <tr th:each="product : ${products}">
                     <th scope="row" th:text="*{product.id}">1</th>
                     <td scope="row" th:text="*{product.name}">Product name</td>
-                    <td scope="row" th:text="*{product.price}">Price</a>
+                    <td scope="row" th:text="*{product.price}">Price</a></td>
+                    <td scope="row" >
+                        <span th:text="*{product.createDate} != null?*{product.createDate}:'-'"></span><hr/>
+                        <span th:text="*{product.modifyDate} != null?*{product.modifyDate}:'-'"></span>
                     </td>
                     <td scope="row" class="text-center" style="width: 10px;">
                         <div class="btn-group me-2" role="group" aria-label="First group">

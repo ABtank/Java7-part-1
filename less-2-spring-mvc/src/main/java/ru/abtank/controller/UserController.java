@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -25,6 +31,9 @@ public class UserController {
     private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
+    private EntityManagerFactory factory;
+
+    @Autowired
     private UserRepository userRepository;
 
     //весь список юзеров
@@ -35,6 +44,7 @@ public class UserController {
                            @RequestParam(value = "login_filter",required = false) String login_filter,
                            @RequestParam(value = "email_filter",required = false) String email_filter
     ) {
+//        1) вариант
         List<User> allUser = new ArrayList<>();
         if (check_login_filter == null && check_email_filter == null) {
             allUser = userRepository.findAll();
@@ -49,10 +59,26 @@ public class UserController {
                 allUser.addAll(userRepository.findByEmailLike("%" + email_filter + "%"));
             }
         }
-        model.addAttribute("users", allUser);
+//        2) вариант Criteria API
+        EntityManager em = factory.createEntityManager();
+        CriteriaBuilder cb =  em.getCriteriaBuilder();
+        CriteriaQuery <User> query = cb.createQuery(User.class);
+        Root<User> from = query.from(User.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if(check_login_filter != null && !login_filter.isEmpty()){
+            predicates.add(cb.like(from.get("login"), "%"+login_filter+"%"));
+        }
+        if(check_email_filter != null && !email_filter.isEmpty()){
+            predicates.add(cb.like(from.get("email"), "%"+email_filter+"%"));
+        }
+        CriteriaQuery<User> cq = query.select(from).where(predicates.toArray(new Predicate[0]));
+        List <User> qAllUser = em.createQuery(cq).getResultList();
+
+
+        model.addAttribute("users", qAllUser);
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
-        LOGGER.info("GET ALL USERS: " + allUser.stream()
+        LOGGER.info("GET ALL USERS: " + qAllUser.stream()
                 .map(User::getLogin)
                 .collect(Collectors.joining(", ")));
         return "users"; // возврат названия html файла из view (представлений)
