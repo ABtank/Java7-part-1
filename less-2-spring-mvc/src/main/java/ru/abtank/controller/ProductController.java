@@ -3,12 +3,15 @@ package ru.abtank.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.abtank.persist.entity.Product;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.ProductRepository;
+import ru.abtank.persist.repo.ProductSpecification;
+import ru.abtank.persist.repo.UserSpecification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -90,6 +93,19 @@ public class ProductController {
         }
         CriteriaQuery<Product> cq = query.select(from).where(predicates.toArray(new Predicate[0]));
         allProduct = em.createQuery(cq).getResultList();
+
+//        3) вариант Specification (добавляем в интерфейс репозитория  JpaSpecificationExecutor<Product> чтоб findAll принимал spec)
+        Specification<Product> spec = ProductSpecification.trueLiteral();
+        if (check_price_min_filter != null && price_min_filter != null){
+            spec = spec.and(ProductSpecification.priceGreater(price_min_filter));
+        }
+        if (check_price_max_filter != null && price_max_filter != null){
+            spec = spec.and(ProductSpecification.priceLess(price_max_filter));
+        }
+        if (check_name_filter != null && !name_filter.isEmpty()){
+            spec = spec.and(ProductSpecification.nameContains(name_filter));
+        }
+        allProduct = productRepository.findAll(spec);
 
 
         model.addAttribute("products", allProduct);

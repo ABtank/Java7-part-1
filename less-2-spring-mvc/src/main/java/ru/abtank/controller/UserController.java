@@ -3,12 +3,14 @@ package ru.abtank.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.UserRepository;
+import ru.abtank.persist.repo.UserSpecification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -72,17 +74,28 @@ public class UserController {
             predicates.add(cb.like(from.get("email"), "%"+email_filter+"%"));
         }
         CriteriaQuery<User> cq = query.select(from).where(predicates.toArray(new Predicate[0]));
-        List <User> qAllUser = em.createQuery(cq).getResultList();
+        allUser = em.createQuery(cq).getResultList();
 
+//    3) вариант Specification (добавляем в интерфейс репозитория  JpaSpecificationExecutor<User> чтоб findAll принимал spec)
+        Specification <User> spec = UserSpecification.trueLiteral();
+        if(check_login_filter != null && !login_filter.isEmpty()){
+            spec = spec.and(UserSpecification.loginContains(login_filter));
+        }
+        if(check_email_filter != null && !email_filter.isEmpty()){
+            spec = spec.and(UserSpecification.emailContains(email_filter));
+        }
+        allUser = userRepository.findAll(spec);
 
-        model.addAttribute("users", qAllUser);
+        model.addAttribute("users", allUser);
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
-        LOGGER.info("GET ALL USERS: " + qAllUser.stream()
+        LOGGER.info("GET ALL USERS: " + allUser.stream()
                 .map(User::getLogin)
                 .collect(Collectors.joining(", ")));
         return "users"; // возврат названия html файла из view (представлений)
     }
+
+
 
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
