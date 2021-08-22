@@ -3,6 +3,9 @@ package ru.abtank.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,7 +48,10 @@ public class UserController {
                            @RequestParam(value = "check_login_filter", required = false) Boolean check_login_filter,
                            @RequestParam(value = "check_email_filter", required = false) Boolean check_email_filter,
                            @RequestParam(value = "login_filter",required = false) String login_filter,
-                           @RequestParam(value = "email_filter",required = false) String email_filter
+                           @RequestParam(value = "email_filter",required = false) String email_filter,
+                           @RequestParam("page") Optional<Integer> page,
+                           @RequestParam("size") Optional<Integer> size,
+                           @RequestParam("sort") Optional<String> sort
     ) {
 //        1) вариант
         List<User> allUser = new ArrayList<>();
@@ -85,6 +92,12 @@ public class UserController {
             spec = spec.and(UserSpecification.emailContains(email_filter));
         }
         allUser = userRepository.findAll(spec);
+
+//        c пагинацией
+        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), Sort.Direction.ASC, sort.orElse("id"));
+
+        Page<User> userPage = userRepository.findAll(spec, pageRequest);
+        model.addAttribute("usersPage", userPage);
 
         model.addAttribute("users", allUser);
         model.addAttribute("time", getDate());

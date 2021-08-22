@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="row py-2">
-        <div class="col-4"  id="blok_filter">
+        <div class="col-4" id="block_filter">
             <form th:method="get" class="border border-secondary rounded p-2">
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-text">
@@ -16,7 +16,8 @@
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Login</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                    <input type="text" class="form-control" aria-label="Sizing example input"
+                           aria-describedby="inputGroup-sizing-sm"
                            name="login_filter" id="login_filter" th:value="${param.login_filter}">
                 </div>
                 <div class="input-group input-group-sm mb-3">
@@ -27,7 +28,8 @@
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                    <input type="text" class="form-control" aria-label="Sizing example input"
+                           aria-describedby="inputGroup-sizing-sm"
                            name="email_filter" id="email_filter" th:value="${param.email_filter}">
                 </div>
                 <button class="btn btn-success" type="submit">Filter</button>
@@ -38,22 +40,38 @@
             <table class="table table-bordered my-2">
                 <thead>
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Login</th>
-                    <th scope="col">Email</th>
+                    <th scope="col">
+                        <a class="nav-link"
+                           th:text="Id"
+                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id')}"
+                        >Id</a>
+                    </th>
+                    <th scope="col">
+                        <a class="nav-link"
+                           th:text="Login"
+                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login')}"
+                        >Login</a>
+                    </th>
+                    <th scope="col">
+                        <a class="nav-link"
+                           th:text="Email"
+                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email')}"
+                        >Email</a>
+                    </th>
                     <th scope="col">Create/Update</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${usersPage.content}">
                     <th scope="row" th:text="*{user.id}">1</th>
                     <td scope="row" th:text="*{user.login}">User Login</td>
                     <td scope="row">
                         <a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a>
                     </td>
-                    <td scope="row" >
-                        <span th:text="*{user.createDate} != null?*{user.createDate}:'-'"></span><hr/>
+                    <td scope="row">
+                        <span th:text="*{user.createDate} != null?*{user.createDate}:'-'"></span>
+                        <hr/>
                         <span th:text="*{user.modifyDate} != null?*{user.modifyDate}:'-'"></span>
                     </td>
                     <td scope="row" class="text-center" style="width: 10px;">
@@ -68,6 +86,36 @@
                 </tr>
                 </tbody>
             </table>
+        </div>
+        <div class="col-12">
+            <nav aria-label="...">
+                <ul class="pagination" >
+                    <li class="page-item " th:classappend="${usersPage.number < 1}?'disabled'">
+                        <a class="page-link"
+                           th:text="Previous"
+                           th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                           tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+
+                    <li th:each="num: ${#numbers.sequence(1,usersPage.totalPages)}"
+                        th:classappend="${num == usersPage.number+1}? 'active'"
+                        th:if="${num >= usersPage.number && num <= usersPage.number+2 && usersPage.number!=0 ||
+                                 num > 0 && num <= usersPage.number + 3 && usersPage.number==0 ||
+                                 usersPage.number==usersPage.totalPages-1}"
+                        class="page-item">
+                        <a class="page-link"
+                           th:text="${num}"
+                           th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${usersPage.number+1 >= usersPage.totalPages}?'disabled'">
+                        <a class="page-link"
+                           th:text="Next"
+                           th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                        >Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
