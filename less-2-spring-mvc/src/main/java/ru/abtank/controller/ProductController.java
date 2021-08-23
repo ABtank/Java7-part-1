@@ -7,11 +7,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.persist.entity.Product;
-import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.ProductRepository;
 import ru.abtank.persist.repo.ProductSpecification;
-import ru.abtank.persist.repo.UserSpecification;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -126,9 +125,12 @@ public class ProductController {
     }
 
     @PostMapping("/update")
-    public String updateProduct(Product product) {
+    public String updateProduct(Product product, RedirectAttributes redirectAttributes) {
         LOGGER.info("UPDATE OR INSERT PRODUCT: " + product.toString());
+        String msg = (product.getId() != null) ? "Susses update Product " : "Susses create Product ";
         productRepository.save(product);
+        msg += product.getName();
+        redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/product";
     }
 

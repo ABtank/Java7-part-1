@@ -17,16 +17,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
-    @NotBlank //валидация
+    @NotBlank (message = "Укажите Login") //валидация
     private String login;
     @Column
-    @NotBlank //валидация
+    @NotBlank (message = "Укажите password")//валидация
     private String password;
     @Transient //не добавляем в БД
     private String matchingPassword;
     @Column
-    @Email //валидация
-    @NotBlank
+    @Email (message = "Укажите корректный Email")//валидация
+    @NotBlank (message = "Укажите Email")
     private String email;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

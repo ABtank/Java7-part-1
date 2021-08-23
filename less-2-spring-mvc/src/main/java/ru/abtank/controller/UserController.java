@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.UserRepository;
 import ru.abtank.persist.repo.UserSpecification;
@@ -47,14 +48,14 @@ public class UserController {
     public String allUsers(Model model,
                            @RequestParam(value = "check_login_filter", required = false) Boolean check_login_filter,
                            @RequestParam(value = "check_email_filter", required = false) Boolean check_email_filter,
-                           @RequestParam(value = "login_filter",required = false) String login_filter,
-                           @RequestParam(value = "email_filter",required = false) String email_filter,
+                           @RequestParam(value = "login_filter", required = false) String login_filter,
+                           @RequestParam(value = "email_filter", required = false) String email_filter,
                            @RequestParam("page") Optional<Integer> page,
                            @RequestParam("size") Optional<Integer> size,
                            @RequestParam("sort") Optional<String> sort,
                            @RequestParam("direction") Optional<String> direction
     ) {
-        LOGGER.info("check_login_filter {} \n check_email_filter {} \n",check_login_filter,check_email_filter);
+        LOGGER.info("check_login_filter {} \n check_email_filter {} \n", check_login_filter, check_email_filter);
 //        1) вариант
         List<User> allUser = new ArrayList<>();
         if (check_login_filter == null && check_email_filter == null) {
@@ -73,31 +74,31 @@ public class UserController {
 
 //        2) вариант Criteria API
         EntityManager em = factory.createEntityManager();
-        CriteriaBuilder cb =  em.getCriteriaBuilder();
-        CriteriaQuery <User> query = cb.createQuery(User.class);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> from = query.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
-        if(check_login_filter != null && !login_filter.isEmpty()){
-            predicates.add(cb.like(from.get("login"), "%"+login_filter+"%"));
+        if (check_login_filter != null && !login_filter.isEmpty()) {
+            predicates.add(cb.like(from.get("login"), "%" + login_filter + "%"));
         }
-        if(check_email_filter != null && !email_filter.isEmpty()){
-            predicates.add(cb.like(from.get("email"), "%"+email_filter+"%"));
+        if (check_email_filter != null && !email_filter.isEmpty()) {
+            predicates.add(cb.like(from.get("email"), "%" + email_filter + "%"));
         }
         CriteriaQuery<User> cq = query.select(from).where(predicates.toArray(new Predicate[0]));
         allUser = em.createQuery(cq).getResultList();
 
 //    3) вариант Specification (добавляем в интерфейс репозитория  JpaSpecificationExecutor<User> чтоб findAll принимал spec)
-        Specification <User> spec = UserSpecification.trueLiteral();
-        if(check_login_filter != null && !login_filter.isEmpty()){
+        Specification<User> spec = UserSpecification.trueLiteral();
+        if (check_login_filter != null && !login_filter.isEmpty()) {
             spec = spec.and(UserSpecification.loginContains(login_filter));
         }
-        if(check_email_filter != null && !email_filter.isEmpty()){
+        if (check_email_filter != null && !email_filter.isEmpty()) {
             spec = spec.and(UserSpecification.emailContains(email_filter));
         }
         allUser = userRepository.findAll(spec);
 
 //        c пагинацией
-        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), direction.isEmpty()?Sort.Direction.ASC: Sort.Direction.DESC, sort.orElse("id"));
+        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), direction.isEmpty() ? Sort.Direction.ASC : Sort.Direction.DESC, sort.orElse("id"));
 
         Page<User> userPage = userRepository.findAll(spec, pageRequest);
         model.addAttribute("usersPage", userPage);
@@ -112,7 +113,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
         User user = userRepository.findById(id).get();
@@ -123,7 +123,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) throws SQLException {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         LOGGER.info("START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
             return "user";
@@ -132,7 +132,10 @@ public class UserController {
             bindingResult.rejectValue("password", "error.password", "пароль не совпал");
             return "user";
         }
+        String msg = (user.getId() != null) ? "Susses update User " : "Susses create User ";
         userRepository.save(user);
+        msg += user.getLogin();
+        redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/user";
     }
 

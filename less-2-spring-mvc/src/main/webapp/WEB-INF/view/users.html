@@ -5,6 +5,7 @@
 <div th:replace="fragments/nav :: nav"></div>
 
 <div class="container">
+    <div th:replace="fragments/message :: msg"></div>
     <div class="row py-2">
         <div class="col-4" id="block_filter">
             <form th:method="get" class="border border-secondary rounded p-2">
@@ -12,7 +13,7 @@
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_login_filter" id="check_login_filter"
-                                th:checked="${#strings.equals(param.check_login_filter,'on')}"
+                               th:checked="${#strings.equals(param.check_login_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Login</span>
@@ -24,7 +25,7 @@
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_email_filter" id="check_email_filter"
-                                th:checked="${#strings.equals(param.check_email_filter,'on')}"
+                               th:checked="${#strings.equals(param.check_email_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
@@ -141,12 +142,8 @@
     </div>
 </div>
 
-<script>
-    $(function () {
-       if($("#check_login_filter").text
-    });
-</script>
 
+<div th:replace="fragments/message :: msg_close"></div>
 <script th:replace="fragments/footer :: core_scripts"></script>
 </body>
 </html>
