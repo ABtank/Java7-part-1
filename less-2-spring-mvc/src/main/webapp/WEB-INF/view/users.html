@@ -12,7 +12,7 @@
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_login_filter" id="check_login_filter"
-                               th:value="${true}" th:checked="${param.check_login_filter}"
+                                th:checked="${#strings.equals(param.check_login_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Login</span>
@@ -24,7 +24,7 @@
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_email_filter" id="check_email_filter"
-                               th:value="${true}" th:checked="${param.check_email_filter}"
+                                th:checked="${#strings.equals(param.check_email_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
@@ -41,22 +41,43 @@
                 <thead>
                 <tr>
                     <th scope="col">
-                        <a class="nav-link"
-                           th:text="Id"
-                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id')}"
-                        >Id</a>
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Id</span></div>
+                            <div class="btn-group btn-group-xs col-md-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
                     </th>
                     <th scope="col">
-                        <a class="nav-link"
-                           th:text="Login"
-                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login')}"
-                        >Login</a>
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Login</span></div>
+                            <div class="btn-group btn-group-xs col-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
                     </th>
                     <th scope="col">
-                        <a class="nav-link"
-                           th:text="Email"
-                           th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email')}"
-                        >Email</a>
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Email</span></div>
+                            <div class="btn-group btn-group-xs col-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
                     </th>
                     <th scope="col">Create/Update</th>
                     <th scope="col">Action</th>
@@ -89,11 +110,11 @@
         </div>
         <div class="col-12">
             <nav aria-label="...">
-                <ul class="pagination" >
+                <ul class="pagination">
                     <li class="page-item " th:classappend="${usersPage.number < 1}?'disabled'">
                         <a class="page-link"
                            th:text="Previous"
-                           th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                           th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}"
                            tabindex="-1" aria-disabled="true">Previous</a>
                     </li>
 
@@ -101,17 +122,17 @@
                         th:classappend="${num == usersPage.number+1}? 'active'"
                         th:if="${num >= usersPage.number && num <= usersPage.number+2 && usersPage.number!=0 ||
                                  num > 0 && num <= usersPage.number + 3 && usersPage.number==0 ||
-                                 usersPage.number==usersPage.totalPages-1}"
+                                 num >= usersPage.number - 1 && usersPage.number==usersPage.totalPages-1}"
                         class="page-item">
                         <a class="page-link"
                            th:text="${num}"
-                           th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}">1</a>
+                           th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}">1</a>
                     </li>
 
                     <li class="page-item" th:classappend="${usersPage.number+1 >= usersPage.totalPages}?'disabled'">
                         <a class="page-link"
                            th:text="Next"
-                           th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                           th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
                         >Next</a>
                     </li>
                 </ul>
@@ -120,6 +141,11 @@
     </div>
 </div>
 
+<script>
+    $(function () {
+       if($("#check_login_filter").text
+    });
+</script>
 
 <script th:replace="fragments/footer :: core_scripts"></script>
 </body>

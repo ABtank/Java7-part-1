@@ -51,8 +51,10 @@ public class UserController {
                            @RequestParam(value = "email_filter",required = false) String email_filter,
                            @RequestParam("page") Optional<Integer> page,
                            @RequestParam("size") Optional<Integer> size,
-                           @RequestParam("sort") Optional<String> sort
+                           @RequestParam("sort") Optional<String> sort,
+                           @RequestParam("direction") Optional<String> direction
     ) {
+        LOGGER.info("check_login_filter {} \n check_email_filter {} \n",check_login_filter,check_email_filter);
 //        1) вариант
         List<User> allUser = new ArrayList<>();
         if (check_login_filter == null && check_email_filter == null) {
@@ -68,6 +70,7 @@ public class UserController {
                 allUser.addAll(userRepository.findByEmailLike("%" + email_filter + "%"));
             }
         }
+
 //        2) вариант Criteria API
         EntityManager em = factory.createEntityManager();
         CriteriaBuilder cb =  em.getCriteriaBuilder();
@@ -94,7 +97,7 @@ public class UserController {
         allUser = userRepository.findAll(spec);
 
 //        c пагинацией
-        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), Sort.Direction.ASC, sort.orElse("id"));
+        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), direction.isEmpty()?Sort.Direction.ASC: Sort.Direction.DESC, sort.orElse("id"));
 
         Page<User> userPage = userRepository.findAll(spec, pageRequest);
         model.addAttribute("usersPage", userPage);
