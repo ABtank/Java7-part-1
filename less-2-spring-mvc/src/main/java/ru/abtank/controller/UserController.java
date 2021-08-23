@@ -129,7 +129,7 @@ public class UserController {
             return "user";
         }
         if (!user.getPassword().equals(user.getMatchingPassword())) {
-            bindingResult.rejectValue("password", "error.password", "пароль не совпал");
+            bindingResult.rejectValue("matchingPassword", "error.matchingPassword", "пароль не совпал");
             return "user";
         }
         String msg = (user.getId() != null) ? "Susses update User " : "Susses create User ";

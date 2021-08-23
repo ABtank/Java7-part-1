@@ -10,10 +10,10 @@
         <div class="col-12">
             <form th:action="@{/user/update}" method="post" th:object="${user}">
                 <div th:replace="fragments/message :: error_message"></div>
-                <input th:type="hidden" th:field="*{id}">
+                <input th:type="hidden" th:field="*{id}" th:errorclass="is-invalid" >
                 <div class="form-group">
                     <label>Login</label>
-                    <input type="text" class="form-control" th:field="*{login}" placeholder="Enter login">
+                    <input type="text" class="form-control" th:field="*{login}" th:errorclass="is-invalid" placeholder="Enter login">
                     <small id="loginError" class="form-text alert-danger"
                            th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error
                     </small>
@@ -23,21 +23,23 @@
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" class="form-control" th:field="*{email}" placeholder="Enter email">
+                    <input type="email" class="form-control" th:field="*{email}" th:errorclass="is-invalid" placeholder="Enter email">
                     <small id="emailError" class="form-text alert-danger"
                            th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Validation error
                     </small>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" class="form-control" th:field="*{password}" placeholder="Enter password">
+                    <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid" placeholder="Enter password">
+                    <small id="passwordError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Validation error</small>
                 </div>
                 <div class="form-group">
                     <label>matchingPassword</label>
-                    <input type="password" class="form-control" th:field="*{matchingPassword}"
+                    <input type="password" class="form-control" th:field="*{matchingPassword}" th:classappend="${#fields.hasErrors('matchingPassword')}?'is-invalid'"
                            placeholder="Confirm password">
-                    <small id="passwordError" class="form-text alert-danger"
-                           th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Validation error</small>
+                    <small id="matchingPasswordError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('matchingPassword')}" th:errors="*{matchingPassword}">Validation error</small>
                 </div>
                 <button type="Submit" class="btn btn-primary">Submit</button>
             </form>
