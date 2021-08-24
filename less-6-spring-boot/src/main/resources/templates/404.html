@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head :: head"></div>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div th:replace="fragments/message :: msg"></div>
+    <div class="row py-2">
+        <div class="col-12">
+            <div class="alert alert-danger alert-dismissible fade show" id="exception" role="alert">
+                <h2><strong>ALERT!</strong> <span th:text="${class}"></span></h2>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/message :: msg_close"></div>
+<script th:replace="fragments/footer :: core_scripts"></script>
+</body>
+</html>
