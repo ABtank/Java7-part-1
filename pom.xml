@@ -13,6 +13,7 @@
         <module>less-1-network-chat</module>
         <module>less-2-spring-mvc</module>
         <module>less-3-hibernate</module>
+        <module>less-6-spring-boot</module>
     </modules>
 
     <properties>
