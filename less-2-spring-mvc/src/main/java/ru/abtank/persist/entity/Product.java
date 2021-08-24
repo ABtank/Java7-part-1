@@ -90,13 +90,18 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price='" + price + '\'' +
-                ", createDate=" + new SimpleDateFormat("dd MMMM yyyy").format(createDate) +
-                ", modifyDate=" + new SimpleDateFormat("dd MMMM yyyy").format(modifyDate) +
-                '}';
+        StringBuilder cb = new StringBuilder("User{");
+        cb.append("id=").append(id).append(", ");
+        cb.append("name=").append(name).append(", ");
+        cb.append("description=").append(description).append(", ");
+        cb.append("price=").append(price).append(", ");
+        if(createDate != null){
+            cb.append("createDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(createDate)).append(", ");
+        }
+        if(modifyDate != null){
+            cb.append("modifyDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(modifyDate)).append(", ");
+        }
+        cb.append("}\n");
+        return cb.toString();
     }
 }

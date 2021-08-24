@@ -17,16 +17,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
-    @NotBlank //валидация
+    @NotBlank (message = "Укажите Login") //валидация
     private String login;
     @Column
-    @NotBlank //валидация
+    @NotBlank (message = "Укажите password")//валидация
     private String password;
     @Transient //не добавляем в БД
     private String matchingPassword;
     @Column
-    @Email //валидация
-    @NotBlank
+    @Email (message = "Укажите корректный Email")//валидация
+    @NotBlank (message = "Укажите Email")
     private String email;
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -105,14 +105,20 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", matchingPassword='" + matchingPassword + '\'' +
-                ", email='" + email + '\'' +
-                ", createDate=" + new SimpleDateFormat("dd MMMM yyyy").format(createDate) +
-                ", modifyDate=" + new SimpleDateFormat("dd MMMM yyyy").format(modifyDate) +
-                '}';
+        StringBuilder cb = new StringBuilder("User{");
+        cb.append("id=").append(id).append(", ");
+        cb.append("login=").append(login).append(", ");
+        cb.append("password=").append(password).append(", ");
+        cb.append("matchingPassword=").append(matchingPassword).append(", ");
+        cb.append("email=").append(email).append(", ");
+        if(createDate != null){
+            cb.append("createDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(createDate)).append(", ");
+        }
+        if(modifyDate != null){
+            cb.append("modifyDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(modifyDate)).append(", ");
+        }
+        cb.append("}\n");
+
+        return cb.toString();
     }
 }

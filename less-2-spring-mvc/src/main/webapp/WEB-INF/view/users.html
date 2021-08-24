@@ -5,29 +5,32 @@
 <div th:replace="fragments/nav :: nav"></div>
 
 <div class="container">
+    <div th:replace="fragments/message :: msg"></div>
     <div class="row py-2">
-        <div class="col-4"  id="blok_filter">
+        <div class="col-4" id="block_filter">
             <form th:method="get" class="border border-secondary rounded p-2">
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_login_filter" id="check_login_filter"
-                               th:value="${true}" th:checked="${param.check_login_filter}"
+                               th:checked="${#strings.equals(param.check_login_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Login</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                    <input type="text" class="form-control" aria-label="Sizing example input"
+                           aria-describedby="inputGroup-sizing-sm"
                            name="login_filter" id="login_filter" th:value="${param.login_filter}">
                 </div>
                 <div class="input-group input-group-sm mb-3">
                     <div class="input-group-text">
                         <input class="form-check-input mt-0" type="checkbox"
                                name="check_email_filter" id="check_email_filter"
-                               th:value="${true}" th:checked="${param.check_email_filter}"
+                               th:checked="${#strings.equals(param.check_email_filter,'on')}"
                                aria-label="Checkbox for following text input">
                     </div>
                     <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
+                    <input type="text" class="form-control" aria-label="Sizing example input"
+                           aria-describedby="inputGroup-sizing-sm"
                            name="email_filter" id="email_filter" th:value="${param.email_filter}">
                 </div>
                 <button class="btn btn-success" type="submit">Filter</button>
@@ -38,18 +41,60 @@
             <table class="table table-bordered my-2">
                 <thead>
                 <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Login</th>
-                    <th scope="col">Email</th>
+                    <th scope="col">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Id</span></div>
+                            <div class="btn-group btn-group-xs col-md-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='id',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Login</span></div>
+                            <div class="btn-group btn-group-xs col-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='login',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Email</span></div>
+                            <div class="btn-group btn-group-xs col-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{user(page=${usersPage.number+1},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter},sort='email',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                    </th>
+                    <th scope="col">Create/Update</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user : ${users}">
+                <tr th:each="user : ${usersPage.content}">
                     <th scope="row" th:text="*{user.id}">1</th>
                     <td scope="row" th:text="*{user.login}">User Login</td>
                     <td scope="row">
                         <a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a>
+                    </td>
+                    <td scope="row">
+                        <span th:text="*{user.createDate} != null?*{user.createDate}:'-'"></span>
+                        <hr/>
+                        <span th:text="*{user.modifyDate} != null?*{user.modifyDate}:'-'"></span>
                     </td>
                     <td scope="row" class="text-center" style="width: 10px;">
                         <div class="btn-group me-2" role="group" aria-label="First group">
@@ -64,10 +109,41 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-12">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item " th:classappend="${usersPage.number < 1}?'disabled'">
+                        <a class="page-link"
+                           th:text="Previous"
+                           th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}"
+                           tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+
+                    <li th:each="num: ${#numbers.sequence(1,usersPage.totalPages)}"
+                        th:classappend="${num == usersPage.number+1}? 'active'"
+                        th:if="${num >= usersPage.number && num <= usersPage.number+2 && usersPage.number!=0 ||
+                                 num > 0 && num <= usersPage.number + 3 && usersPage.number==0 ||
+                                 num >= usersPage.number - 1 && usersPage.number==usersPage.totalPages-1}"
+                        class="page-item">
+                        <a class="page-link"
+                           th:text="${num}"
+                           th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${usersPage.number+1 >= usersPage.totalPages}?'disabled'">
+                        <a class="page-link"
+                           th:text="Next"
+                           th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                        >Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
 
 
+<div th:replace="fragments/message :: msg_close"></div>
 <script th:replace="fragments/footer :: core_scripts"></script>
 </body>
 </html>
