@@ -20,12 +20,18 @@
         <strong>Success!</strong> <span th:text="${msg}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+
+    <div class="alert alert-danger alert-dismissible fade show" id="exception" role="alert" th:if="${exception}">
+        <strong>ALERT!</strong> <span th:text="${exception}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 </div>
 
 <th:block th:fragment="msg_close">
     <script>
         setTimeout(function () {
-            $("#msg").hide('slow');
+            $("#msg").fadeOut('slow');
+            $("#exception").fadeOut('slow');
         }, 5000);
     </script>
 </th:block>

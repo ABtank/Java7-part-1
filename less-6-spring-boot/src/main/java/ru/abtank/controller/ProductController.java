@@ -66,7 +66,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String editProduct(@PathVariable("id") Integer id, Model model) throws SQLException {
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(()->new NotFoundException(Product.class.getSimpleName(), id,"not Found!"));
         LOGGER.info("EDIT PRODUCT: " + product.toString());
         model.addAttribute("nav_selected", "nav_products");
         model.addAttribute("product", product);

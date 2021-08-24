@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.UserRepository;
@@ -71,7 +73,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
-        User user = userRepository.findById(id).get();
+        User user = userRepository.findById(id).orElseThrow(()->new NotFoundException(User.class.getSimpleName(), id,"not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "nav_users");
@@ -117,5 +119,13 @@ public class UserController {
         return dateFormat.format(cal.getTime());
     }
 
+//    отрабатывает только при exception в данном контроллере
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    public ModelAndView notFoundException (NotFoundException exception){
+//        ModelAndView modelAndView = new ModelAndView("404");
+//        modelAndView.getModel().put("exception", exception.getMessage());
+//        modelAndView.getModel().put("class", exception.getMessage());
+//        return modelAndView;
+//    }
 
 }
