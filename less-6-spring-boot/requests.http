@@ -1,0 +1,24 @@
+GET http://localhost:7777/mvc/api/v1/user/all
+###
+GET http://localhost:7777/mvc/api/v1/user/1/id
+###
+POST http://localhost:7777/mvc/api/v1/user
+Content-Type: application/json
+
+{
+  "login": "POST Iurii Abramovich",
+  "password": "123"
+}
+
+###
+PUT http://localhost:7777/mvc/api/v1/user
+Content-Type: application/json
+
+{
+  "id": 50,
+  "login": "PUT Iurii Abramovich",
+  "password": "1234",
+  "email": "abtankbkru@gmail.com"
+}
+###
+DELETE http://localhost:7777/mvc/api/v1/user/51/id
