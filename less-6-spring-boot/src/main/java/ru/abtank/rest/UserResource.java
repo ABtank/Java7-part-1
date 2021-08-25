@@ -8,9 +8,11 @@ import ru.abtank.controller.NotFoundException;
 import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.UserRepository;
 
+import javax.validation.ConstraintViolationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:63342") // разрешаем получать и обрабатывать запросы с данного адреса
 @RequestMapping("/api/v1/user")   //
 @RestController
 public class UserResource {
@@ -67,5 +69,10 @@ public class UserResource {
     @ExceptionHandler
     public ResponseEntity<String> sqlIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception) {
         return new ResponseEntity<>(exception.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> constraintViolationException(ConstraintViolationException exception) {
+        return new ResponseEntity<>(exception.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
 }
