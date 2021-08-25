@@ -59,6 +59,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+<!--			Чтоб собрать jar из CMD указываем версию 3.1.0 иначе ошибку выдает-->
+<!--			в консоли пишем в корне модуля-->
+<!--			mvn clean-->
+<!--			mvn compile-->
+<!--			mvn package-->
+<!--			java -jar target/less-6-spring-boot-0.0.1-SNAPSHOT.jar-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.1.0</version>
+			</plugin>
 		</plugins>
 	</build>
 
