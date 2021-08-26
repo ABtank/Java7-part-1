@@ -22,3 +22,8 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:7777/mvc/api/v1/user/51/id
+
+
+### авторизованные запросы 1) тип авторизации 2) логин пароль
+GET http://localhost:7777/mvc/api/v1/user/all
+Authorization: Basic in_user 123
