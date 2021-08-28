@@ -19,7 +19,7 @@ public class User {
     @Column
     @NotBlank (message = "Укажите Login") //валидация
     private String login;
-    @Column
+    @Column(length = 255)
     @NotBlank (message = "Укажите password")//валидация
     private String password;
     @Transient //не добавляем в БД
