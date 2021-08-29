@@ -25,6 +25,11 @@
                        th:classappend="${nav_selected} == 'nav_users' ? active :' '"
                        th:selected="${nav_selected} == 'nav_users'" th:href="@{/user}">Users</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link "
+                       th:classappend="${nav_selected} == 'nav_roles' ? active :' '"
+                       th:selected="${nav_selected} == 'nav_roles'" th:href="@{/role}">Roles</a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                        th:classappend="${nav_selected} == 'ADD_NEW' ? active :' '"
@@ -34,6 +39,7 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" th:href="@{/product/create}">Add new product</a></li>
                         <li><a class="dropdown-item" th:href="@{/user/create}">Add new User</a></li>
+                        <li><a class="dropdown-item" th:href="@{/role/create}">Add new Role</a></li>
                     </ul>
                 </li>
             </ul>

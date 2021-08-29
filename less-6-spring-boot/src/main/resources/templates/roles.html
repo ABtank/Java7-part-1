@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div th:replace="fragments/message :: msg"></div>
+    <div class="row py-2">
+        <div class="col-12">
+            <table class="table table-bordered my-2">
+                <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Id</span></div>
+                            <div class="btn-group btn-group-xs col-md-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{role(page=${rolesPage.number+1},size=${rolesPage.size})}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{role(page=${rolesPage.number+1},size=${rolesPage.size},direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div class="row justify-content-between">
+                            <div class="col-md-4"><span>Name</span></div>
+                            <div class="btn-group btn-group-xs col-4" role="group" aria-label="First group">
+                                <a class="btn-xs"
+                                   th:href="@{role(page=${rolesPage.number+1},size=${rolesPage.size},sort='name')}"
+                                ><i class="bi bi-arrow-down"></i></a>
+                                <a class="btn-xs"
+                                   th:href="@{role(page=${rolesPage.number+1},size=${rolesPage.size},sort='name',direction='DESC')}"
+                                ><i class="bi bi-arrow-up"></i></a>
+                            </div>
+                        </div>
+                    </th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="role : ${rolesPage.content}">
+                    <th scope="row" th:text="*{role.id}">1</th>
+                    <td scope="row" th:text="*{role.name}">Role name</td>
+                    <td scope="row" class="text-center" style="width: 10px;">
+                        <div class="btn-group me-2" role="group" aria-label="First group">
+                            <a class="btn btn-success" th:href="@{/role/{id}(id = ${role.id})}"><i
+                                    class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/role/{id}/delete (id=*{role.id})}" th:method="delete">
+                                <button class="btn btn-danger" type="Submit"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12">
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item " th:classappend="${rolesPage.number < 1}?'disabled'">
+                        <a class="page-link"
+                           th:text="Previous"
+                           th:href="@{role(page=${rolesPage.number},size=${rolesPage.size})}"
+                           tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+
+                    <li th:each="num: ${#numbers.sequence(1,rolesPage.totalPages)}"
+                        th:classappend="${num == rolesPage.number+1}? 'active'"
+                        th:if="${num >= rolesPage.number && num <= rolesPage.number+2 && rolesPage.number!=0 ||
+                                 num > 0 && num <= rolesPage.number + 3 && rolesPage.number==0 ||
+                                 num >= rolesPage.number - 1 && rolesPage.number==rolesPage.totalPages-1}"
+                        class="page-item">
+                        <a class="page-link"
+                           th:text="${num}"
+                           th:href="@{role(page=${num},size=${rolesPage.size})}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${rolesPage.number+1 >= rolesPage.totalPages}?'disabled'">
+                        <a class="page-link"
+                           th:text="Next"
+                           th:href="@{role(page=${rolesPage.number+2},size=${rolesPage.size})}"
+                        >Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="fragments/message :: msg_close"></div>
+<script th:replace="fragments/footer :: core_scripts"></script>
+</body>
+</html>

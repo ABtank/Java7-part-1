@@ -15,6 +15,10 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException() {
     }
 
+    public NotFoundException(String message) {
+        this.errorMessage = message;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -36,7 +40,7 @@ public class NotFoundException extends RuntimeException {
     }
 
     public String getMessage() {
-        return String.format("%s id=%d %s",className,id,errorMessage);
+        return String.format("%s id=%d %s", className, id, errorMessage);
     }
 
     public void setErrorMessage(String errorMessage) {
