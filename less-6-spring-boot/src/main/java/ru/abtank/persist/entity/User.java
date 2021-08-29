@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -17,25 +18,37 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
-    @NotBlank (message = "Укажите Login") //валидация
+    @NotBlank(message = "Укажите Login") //валидация
     private String login;
-    @Column
-    @NotBlank (message = "Укажите password")//валидация
+    @Column(length = 255)
+    @NotBlank(message = "Укажите password")//валидация
     private String password;
     @Transient //не добавляем в БД
     private String matchingPassword;
     @Column
-    @Email (message = "Укажите корректный Email")//валидация
-    @NotBlank (message = "Укажите Email")
+    @Email(message = "Укажите корректный Email")//валидация
+    @NotBlank(message = "Укажите Email")
     private String email;
+
+
+    @Column
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    Set<Role> roles;
+
+    @Column(name = "creator_id", nullable=false)
+    private Integer creator_id;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_date")
+    @Column(name = "create_date", updatable=false) //
     private Date createDate;
-
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_date")
+    @Column(name = "modify_date", nullable=false)
     private Date modifyDate;
 
     public User(Integer id, String login, String password, String email) {
@@ -45,7 +58,24 @@ public class User {
         this.email = email;
     }
 
-    public User(){}
+    public User() {
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Integer getCreator_id() {
+        return creator_id;
+    }
+
+    public void setCreator_id(Integer creator_id) {
+        this.creator_id = creator_id;
+    }
 
     public Integer getId() {
         return id;
@@ -90,17 +120,17 @@ public class User {
     public Date getCreateDate() {
         return createDate;
     }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    @PrePersist
+    public void setCreateDate() {
+        this.createDate = this.modifyDate = new Date();
     }
 
     public Date getModifyDate() {
         return modifyDate;
     }
-
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = modifyDate;
+    @PreUpdate
+    public void setModifyDate() {
+        this.modifyDate = new Date();
     }
 
     @Override
@@ -111,10 +141,10 @@ public class User {
         cb.append("password=").append(password).append(", ");
         cb.append("matchingPassword=").append(matchingPassword).append(", ");
         cb.append("email=").append(email).append(", ");
-        if(createDate != null){
+        if (createDate != null) {
             cb.append("createDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(createDate)).append(", ");
         }
-        if(modifyDate != null){
+        if (modifyDate != null) {
             cb.append("modifyDate=").append(new SimpleDateFormat("dd MMMM yyyy").format(modifyDate)).append(", ");
         }
         cb.append("}\n");

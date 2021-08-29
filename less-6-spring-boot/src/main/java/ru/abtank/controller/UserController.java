@@ -8,21 +8,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.abtank.persist.entity.Role;
 import ru.abtank.persist.entity.User;
+import ru.abtank.persist.repo.RoleRepository;
 import ru.abtank.persist.repo.UserRepository;
 import ru.abtank.persist.repo.UserSpecification;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,6 +39,10 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepository roleRepository;
 
     //весь список юзеров
     @GetMapping
@@ -75,14 +85,18 @@ public class UserController {
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
         User user = userRepository.findById(id).orElseThrow(()->new NotFoundException(User.class.getSimpleName(), id,"not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("roles", roles);
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "nav_users");
         return "user";
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         LOGGER.info("START UPDATE OR INSERT USER: " + user.toString());
+        User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
+        LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
             return "user";
         }
@@ -90,7 +104,9 @@ public class UserController {
             bindingResult.rejectValue("matchingPassword", "error.matchingPassword", "пароль не совпал");
             return "user";
         }
-        String msg = (user.getId() != null) ? "Susses update User " : "Susses create User ";
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreator_id(creator.getId());
+        String msg = (user.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update User " : creator.getLogin()+" "+creator.getId()+" Susses create User ";
         userRepository.save(user);
         msg += user.getLogin();
         redirectAttributes.addFlashAttribute("msg", msg);
@@ -100,8 +116,11 @@ public class UserController {
     @GetMapping("/create")
     public String createUser(Model model) {
         User user = new User();
+        List<Role> roles = roleRepository.findAll();
+        LOGGER.info("ROLES: " + roles);
         LOGGER.info("CREATE USER: " + user.toString());
         model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
         model.addAttribute("nav_selected", "ADD_NEW");
         return "user";
     }

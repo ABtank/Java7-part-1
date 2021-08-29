@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+<body>
+<div th:replace="fragments/nav :: nav"></div>
+
+<div class="container">
+    <div th:replace="fragments/message :: msg"></div>
+    <div class="row py-2">
+        <div class="col-12">
+            <form th:action="@{/role/update}" method="post" th:object="${role}">
+                <div th:replace="fragments/message :: error_message"></div>
+                <input th:type="hidden" th:field="*{id}">
+                <div class="form-group">
+                    <label>name</label>
+                    <input type="text" class="form-control" th:field="*{name}" th:errorclass="is-invalid" placeholder="Enter name">
+                    <small id="nameError" class="form-text alert-danger"
+                           th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Validation error
+                    </small>
+                    <small id="nameExist" class="form-text alert-danger"
+                           th:if="${name_exist}" th:text="*{name+' уже занят'}">nameExist
+                    </small>
+                </div>
+                <button type="Submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="fragments/message :: msg_close"></div>
+<script th:replace="fragments/footer :: core_scripts"></script>
+</body>
+</html>
