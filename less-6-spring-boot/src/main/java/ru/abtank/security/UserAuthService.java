@@ -1,15 +1,19 @@
 package ru.abtank.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import ru.abtank.persist.entity.Role;
 import ru.abtank.persist.repo.UserRepository;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class UserAuthService implements UserDetailsService {
 
@@ -27,12 +31,12 @@ public class UserAuthService implements UserDetailsService {
                 .map(user -> new User(
                         user.getLogin(),
                         user.getPassword(),
-//                        mapRolesToAuthorities(user.getRoles())))
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))))
+                        mapRolesToAuthorities(user.getRoles())))
+//                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))))
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("user '%s' not found", username)));
     }
 
-//    public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-//        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-//    }
+    public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
 }
