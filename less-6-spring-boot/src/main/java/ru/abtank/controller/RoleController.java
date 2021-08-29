@@ -6,18 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.persist.entity.Role;
-import ru.abtank.persist.entity.User;
 import ru.abtank.persist.repo.RoleRepository;
-import ru.abtank.persist.repo.UserRepository;
-import ru.abtank.persist.repo.UserSpecification;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
@@ -70,6 +66,7 @@ public class RoleController {
     }
 
     @PostMapping("/update")
+    @Secured("ADMIN")
     public String updateRole(@ModelAttribute("role") @Valid Role role, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         LOGGER.info("START UPDATE OR INSERT ROLE: " + role.toString());
         if (bindingResult.hasErrors()) {
