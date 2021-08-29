@@ -39,8 +39,10 @@ public class User {
     )
     Set<Role> roles;
 
-    @Column(name = "creator_id", nullable=false)
-    private Integer creator_id;
+//добавляем самого себя в entity
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="creator_id", nullable=false, foreignKey=@ForeignKey(name = "FK_CREATOR_ID"))
+    private User creator;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -69,12 +71,12 @@ public class User {
         this.roles = roles;
     }
 
-    public Integer getCreator_id() {
-        return creator_id;
+    public User getCreator() {
+        return creator;
     }
 
-    public void setCreator_id(Integer creator_id) {
-        this.creator_id = creator_id;
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
     public Integer getId() {

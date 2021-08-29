@@ -85,6 +85,7 @@ public class UserController {
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
         User user = userRepository.findById(id).orElseThrow(()->new NotFoundException(User.class.getSimpleName(), id,"not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
+        LOGGER.info("CREATOR USER: " + user.getCreator().getLogin());
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
@@ -94,7 +95,7 @@ public class UserController {
 
     @PostMapping("/update")
     public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
-        LOGGER.info("START UPDATE OR INSERT USER: " + user.toString());
+        LOGGER.info(principal.getName()+" START UPDATE OR INSERT USER: " + user.toString());
         User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
         LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
@@ -105,7 +106,7 @@ public class UserController {
             return "user";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCreator_id(creator.getId());
+        user.setCreator(creator);
         String msg = (user.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update User " : creator.getLogin()+" "+creator.getId()+" Susses create User ";
         userRepository.save(user);
         msg += user.getLogin();
