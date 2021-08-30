@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Spring MVC GeekApp</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <h1>Список коробок:</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <td>Id</td>
+            <td>Цвет</td>
+            <td>Размер</td>
+            <td>Действия</td>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="b : ${frontBoxes}">
+            <td th:text="${b.id}"></td>
+            <td th:text="${b.color}"></td>
+            <td th:text="${'C: ' + b.size}"></td>
+            <td><a class="btn btn-danger" th:href="@{'/boxes/remove/' + ${b.id}}">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <span th:text="'Количество коробок: ' + ${frontBoxes.size()}"/>
+    <form th:action="@{'/boxes/add'}" method="post">
+        <!-- GET http://localhost:8189/app/boxes/add?id=10&color=red&size=20 -->
+        <label>id</label>
+        <input type="number" name="id">
+        <label>color</label>
+        <input type="text" name="color">
+        <label>size</label>
+        <input type="number" name="size">
+        <button class="btn btn-primary" type="submit">Создать</button>
+    </form>
+</body>
+</html>
