@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/hiber</property>
+        <property name="connection.username">postgres</property>
+        <property name="connection.password">123</property>
+        <property name="connection.pool_size">8</property>
+        <property name="current_session_context_class">thread</property>
+
+    <!--update - создаст таблицу в БД если не найдет совпадения сущбности с таблицей в БД-->
+<!--        <property name="hibernate.hbm2ddl.auto">update</property>-->
+    <!--вывод инфы для отладки-->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <property name="hibernate.jdbc.batch_size">10</property>
+
+        <mapping class="ru.abtank.SimplItem"/>
+
+    </session-factory>
+</hibernate-configuration>
