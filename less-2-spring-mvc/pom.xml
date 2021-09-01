@@ -68,6 +68,7 @@
             <artifactId>javax.el</artifactId>
             <version>2.2.6</version>
         </dependency>
+<!--        для работы на версиях java 9+ подключаем анотации из Java EE -->
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>

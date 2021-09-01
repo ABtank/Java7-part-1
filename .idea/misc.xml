@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$/less-2-1-spring-mvc" />
     <file type="web" url="file://$PROJECT_DIR$/less-2-spring-mvc" />
     <file type="web" url="file://$PROJECT_DIR$/less_2_spring_mvc" />
     <file type="web" url="file://$PROJECT_DIR$/lesson-2-spring-mvc" />
