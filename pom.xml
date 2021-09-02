@@ -16,6 +16,7 @@
         <module>less-6-spring-boot</module>
         <module>less-2-1-spring-mvc</module>
         <module>less-3-1-hibernate-postgress</module>
+        <module>less-4-1-spring-boot</module>
     </modules>
 
     <properties>
