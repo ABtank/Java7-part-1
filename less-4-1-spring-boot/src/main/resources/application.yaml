@@ -21,10 +21,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/fitness
     username: postgres
     password: 123
-  h2:console:
-    enabled: true
-    settings:
-      web-allow-others: false
 
 #  Hibernate
   jpa:
