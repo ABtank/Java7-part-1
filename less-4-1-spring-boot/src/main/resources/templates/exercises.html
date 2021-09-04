@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+
+<body class="adminbody">
+
+<div id="main">
+    <!-- top bar navigation -->
+    <div th:replace="fragments/nav :: top_bar_navigation"></div>
+    <!-- End Navigation -->
+    <!-- Left Sidebar -->
+    <div th:replace="fragments/sidebar :: left_sidebar"></div>
+    <!-- End Sidebar -->
+
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb-holder">
+                            <h1 class="main-title float-left">DataTables</h1>
+                            <ol class="breadcrumb float-right">
+                                <li class="breadcrumb-item">Home</li>
+                                <li class="breadcrumb-item active">DataTables</li>
+                            </ol>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h3><i class="fas fa-table"></i>Exercises table</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="exerciseTable" class="table table-bordered table-hover display"
+                                           style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>Exercise</th>
+                                            <th>Category</th>
+                                            <th>Character</th>
+                                            <th>Creator</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="exercise : ${exercises}">
+                                            <th th:text="*{exercise.exerciseId}">id</th>
+                                            <th th:text="*{exercise.exercise}">Exercise</th>
+                                            <th th:text="*{exercise.category.category}">Category</th>
+                                            <th th:text="*{exercise.character.character}">Character</th>
+                                            <th th:text="*{exercise.creator.login}">creator</th>
+                                            <th th:text="*{exercise.createDate}">Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive-->
+
+                            </div>
+                            <!-- end card-body-->
+
+                        </div>
+                        <!-- end card-->
+
+                    </div>
+
+                </div>
+                <!-- end row-->
+
+            </div>
+            <!-- END container-fluid -->
+
+        </div>
+        <!-- END content -->
+
+    </div>
+    <!-- END content-page -->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script th:replace="fragments/footer :: core_scripts"></script>
+
+</div>
+<!-- END main -->
+
+<script th:replace="fragments/footer :: datatables_scripts"></script>
+
+<script>
+    $(document).on('ready', function () {
+        $('#exerciseTable').DataTable();
+    });
+</script>
+<!-- END Java Script for this page -->
+
+</body>
+
+</html>

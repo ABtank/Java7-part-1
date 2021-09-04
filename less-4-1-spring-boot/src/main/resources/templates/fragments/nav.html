@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="nav">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">
+            <img id="imgId" th:src="@{/favicon.ico}" width="40" alt="myImage" height="30"
+                 data-imageDescription="myImage for this page">
+            Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse row justify-content-between" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto col">
+                <li class="nav-item ">
+                    <a class="nav-link "
+                       th:classappend="${nav_selected} == 'nav_products' ? active :' '"
+                       th:selected="${nav_selected} == 'nav_products'" aria-current="page" th:href="@{/product}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "
+                       th:classappend="${nav_selected} == 'nav_users' ? active :' '"
+                       th:selected="${nav_selected} == 'nav_users'" th:href="@{/user}">Users</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link "
+                       th:classappend="${nav_selected} == 'nav_roles' ? active :' '"
+                       th:selected="${nav_selected} == 'nav_roles'" th:href="@{/role}">Roles</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                       th:classappend="${nav_selected} == 'ADD_NEW' ? active :' '"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        ADD NEW
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" th:href="@{/product/create}">Add new product</a></li>
+                        <li><a class="dropdown-item" th:href="@{/user/create}">Add new User</a></li>
+                        <li><a class="dropdown-item" th:href="@{/role/create}">Add new Role</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="col-1" aria-labelledby="logged-in-username" >
+                <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                    <button class="btn btn-outline-success my-2 my-sm-0">Logout
+                    <span sec:authentication="principal.username"></span>
+                    </button>
+                </form>
+                    <a class="btn btn-outline-success my-2 my-sm-0" th:href="@{/login}" sec:authorize="!isAuthenticated()">Login</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- top bar navigation -->
+<div class="headerbar" th:fragment="top_bar_navigation">
+    <!-- LOGO -->
+    <div class="headerbar-left">
+        <a href="index.html" class="logo">
+            <img alt="Logo" th:src="@{/images/favicon.ico}" />
+            <span>ABtank ADMIN</span>
+        </a>
+    </div>
+<nav class="navbar-custom" >
+
+    <ul class="list-inline float-right mb-0">
+
+        <li class="list-inline-item dropdown notif">
+            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#" aria-haspopup="false" aria-expanded="false">
+                <i class="far fa-envelope"></i>
+                <span class="notif-bullet"></span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-arrow-success dropdown-lg">
+                <!-- item-->
+                <div class="dropdown-item noti-title">
+                    <h5>
+                        <small>
+                            <span class="label label-danger pull-xs-right">12</span>Mailbox</small>
+                    </h5>
+                </div>
+
+                <!-- item-->
+                <a href="mail-all.html" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <b>John Doe</b>
+                        <span>New message received</span>
+                        <small class="text-muted">3 minutes ago</small>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="mail-all.html" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <b>Michael Smith</b>
+                        <span>New message received</span>
+                        <small class="text-muted">18 minutes ago</small>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="mail-all.html" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <b>John Lenons</b>
+                        <span>New message received</span>
+                        <small class="text-muted">Yesterday, 18:27</small>
+                    </p>
+                </a>
+
+                <!-- All-->
+                <a href="mail-all.html" class="dropdown-item notify-item notify-all">
+                    View All Messages
+                </a>
+
+            </div>
+
+        </li>
+
+        <li class="list-inline-item dropdown notif">
+            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#" aria-haspopup="false" aria-expanded="false">
+                <i class="far fa-bell"></i>
+                <span class="notif-bullet"></span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-arrow-success dropdown-lg">
+                <!-- item-->
+                <div class="dropdown-item noti-title">
+                    <h5>
+                        <small>
+                            <span class="label label-danger pull-xs-right">5</span>Allerts</small>
+                    </h5>
+                </div>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <div class="notify-icon bg-faded">
+                        <img th:src="@{/images/avatars/avatar2.png}" alt="img" class="rounded-circle img-fluid">
+                    </div>
+                    <p class="notify-details">
+                        <b>John Doe</b>
+                        <span>User registration</span>
+                        <small class="text-muted">3 minutes ago</small>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <div class="notify-icon bg-faded">
+                        <img th:src="@{images/avatars/avatar3.png}" alt="img" class="rounded-circle img-fluid">
+                    </div>
+                    <p class="notify-details">
+                        <b>Michael Cox</b>
+                        <span>Task 2 completed</span>
+                        <small class="text-muted">12 minutes ago</small>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <div class="notify-icon bg-faded">
+                        <img th:src="@{images/avatars/avatar4.png}" alt="img" class="rounded-circle img-fluid">
+                    </div>
+                    <p class="notify-details">
+                        <b>Michelle Dolores</b>
+                        <span>New job completed</span>
+                        <small class="text-muted">35 minutes ago</small>
+                    </p>
+                </a>
+
+                <!-- All-->
+                <a href="#" class="dropdown-item notify-item notify-all">
+                    View All Allerts
+                </a>
+
+            </div>
+        </li>
+
+
+        <li class="list-inline-item dropdown notif">
+            <a class="nav-link dropdown-toggle arrow-none" data-toggle="dropdown" href="#" aria-haspopup="false" aria-expanded="false">
+                <i class="fas fa-cog"></i>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right dropdown-arrow dropdown-arrow-success dropdown-sm">
+                <!-- item-->
+                <div class="dropdown-item noti-title">
+                    <h5>
+                        <small>Settings</small>
+                    </h5>
+                </div>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <i class="fas fa-cog"></i>
+                        <b>Settings 1</b>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <i class="fas fa-cog"></i>
+                        <b>Settings 2</b>
+                    </p>
+                </a>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <p class="notify-details ml-0">
+                        <i class="fas fa-cog"></i>
+                        <b>Settings 3</b>
+                    </p>
+                </a>
+
+            </div>
+
+        </li>
+
+
+        <li class="list-inline-item dropdown notif">
+            <a class="nav-link dropdown-toggle nav-user" data-toggle="dropdown" href="#" aria-haspopup="false" aria-expanded="false">
+                <img th:src="@{/images/avatars/admin.png}" alt="Profile image" class="avatar-rounded">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                <!-- item-->
+                <div class="dropdown-item noti-title">
+                    <h5 class="text-overflow">
+                        <small>Hello, admin</small>
+                    </h5>
+                </div>
+
+                <!-- item-->
+                <a href="profile.html" class="dropdown-item notify-item">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+
+                <!-- item-->
+                <a href="#" class="dropdown-item notify-item">
+                    <i class="fas fa-power-off"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </li>
+
+    </ul>
+
+    <ul class="list-inline menu-left mb-0">
+        <li class="float-left">
+            <button class="button-menu-mobile open-left">
+                <i class="fas fa-bars"></i>
+            </button>
+        </li>
+    </ul>
+
+</nav>
+</div>
+
+
+
+</body>
+</html>
