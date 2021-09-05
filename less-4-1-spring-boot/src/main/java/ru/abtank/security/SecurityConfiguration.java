@@ -17,7 +17,7 @@ import ru.abtank.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletResponse;
 
-@EnableWebSecurity(debug = true)
+//@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(securedEnabled = true)  //включаем защиту на уровне метод
 public class SecurityConfiguration {
 
@@ -62,6 +62,7 @@ public class SecurityConfiguration {
                     .antMatchers("/plugins/*").permitAll()
 //                    .antMatchers("/").anonymous()  // доступ для всех не авторизованных
 //        .antMatchers("/user/**").authenticated()  // всем авторизованным
+                    .antMatchers("/exercise/**").authenticated()
                     .antMatchers("/user/**").hasRole("ADMIN")  // ограничение по роли
                     .antMatchers("/role/**").hasAnyRole("ADMIN", "USER")  // ограничение по роли
                     .and()

@@ -20,7 +20,7 @@ public class Exercise implements Serializable {
     @Column(name = "exercise_id")
     private Integer exerciseId;
 
-    @Column(name = "exercise",nullable = false, unique = true)
+    @Column(name = "exercise", unique = true, nullable = false)
     private String exercise;
 
     @Column(name = "descr")
@@ -65,5 +65,8 @@ public class Exercise implements Serializable {
         this.createDate = new Date();
     }
 
-
+    public Exercise(String exercise, String descr) {
+        this.exercise = exercise;
+        this.descr = descr;
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise ,Integer>, JpaSpecificationExecutor<Exercise> {
 
-    Optional<ExerciseDto> findByExerciseId (Integer id);
+//    Optional<ExerciseDto> findByExerciseId (Integer id);
 
     Optional<Exercise> findByExercise(String exercise);
     Optional<Exercise> findByExerciseLike(String exercisePattern);

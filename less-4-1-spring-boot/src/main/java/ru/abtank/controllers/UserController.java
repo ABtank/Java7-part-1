@@ -68,6 +68,11 @@ public class UserController {
         Page<User> userPage = userRepository.findAll(spec, pageRequest);
         model.addAttribute("usersPage", userPage);
 
+        User user = new User();
+        List<Role> roles = roleRepository.findAll();
+        model.addAttribute("user", user);
+        model.addAttribute("roles", roles);
+
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
         LOGGER.info("GET ALL USERS: " + userPage.stream()
@@ -90,20 +95,30 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+    public String updateUser(Model  model, @ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+        String msg;
         LOGGER.info(principal.getName()+" START UPDATE OR INSERT USER: " + user.toString());
         User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
         LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
-            return "user";
+            return (user.getId() != null)?"user":"users";
+        }
+        Specification<User> spec = UserSpecification.trueLiteral();
+        spec = spec.and(UserSpecification.findBylogin(user.getLogin()));
+        spec = spec.or(UserSpecification.findByEmail(user.getEmail()));
+        List<User> chekEquals = userRepository.findAll(spec);
+        if(!chekEquals.isEmpty()){
+            msg = "Login or email already exists";
+            redirectAttributes.addFlashAttribute("exception", msg);
+            return (user.getId() != null)?"user":"redirect:/user";
         }
         if (!user.getPassword().equals(user.getMatchingPassword())) {
             bindingResult.rejectValue("matchingPassword", "error.matchingPassword", "пароль не совпал");
-            return "user";
+            return (user.getId() != null)?"user":"redirect:/user";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreator(creator);
-        String msg = (user.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update User " : creator.getLogin()+" "+creator.getId()+" Susses create User ";
+        msg = (user.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update User " : creator.getLogin()+" "+creator.getId()+" Susses create User ";
         userRepository.save(user);
         msg += user.getLogin();
         redirectAttributes.addFlashAttribute("msg", msg);

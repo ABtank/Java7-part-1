@@ -40,6 +40,134 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="card mb-3">
                             <div class="card-header">
+
+                                <span class="pull-right">
+                                <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#modal_add_exercise">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i> Add new Exercise</button>
+                                </span>
+                                <div class="modal fade custom-modal" tabindex="-1" role="dialog"
+                                     aria-labelledby="modal_add_exercise" aria-hidden="true" id="modal_add_exercise">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <form th:action="@{/exercise/update}" method="post" th:object="${exercise}"
+                                                  enctype="multipart/form-data">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Add new Exercise</h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        <span class="sr-only">Close</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <input th:type="hidden" th:field="*{exerciseId}">
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <label>Exercise (required)</label>
+                                                                <input class="form-control" th:field="*{exercise}" th:errorclass="is-invalid" type="text"
+                                                                       required/>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <label>Category (required)</label>
+                                                                <select th:field="*{category}"
+                                                                        class="form-control" required>
+                                                                    <option value=""></option>
+                                                                    <optgroup label="Category">
+                                                                        <option th:each="category : ${categories}"
+                                                                                th:text="${category.category}"
+                                                                                th:value="${category.categoryId}"
+                                                                                th:selected="${exercise.category?.contains(category)}"></option>
+                                                                    </optgroup>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label>Description</label>
+                                                                <textarea class="form-control" rows="2"
+                                                                          th:field="*{descr}" th:errorclass="is-invalid"
+                                                                          type="text"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <label>Character</label>
+                                                                <select th:field="*{character}"
+                                                                        class="form-control" required>
+                                                                    <option value=""></option>
+                                                                    <optgroup label="Character">
+                                                                        <option th:each="character : ${characters}"
+                                                                                th:text="${character.character}"
+                                                                                th:value="${character.characterId}"
+                                                                                th:selected="${exercise.character?.contains(character)}"></option>
+                                                                    </optgroup>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-group">
+                                                                <label>Is Cardio</label>
+                                                                <select th:field="*{isCardio}"
+                                                                        class="form-control" >
+                                                                    <option value="">Not</option>
+                                                                    <option value="true">Yes</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row " id="CardioNames">
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group">
+                                                                <label>CardioName1</label>
+                                                                <input class="form-control" th:field="*{cardioName1}" disabled
+                                                                       th:errorclass="is-invalid" type="text"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group">
+                                                                <label>CardioName2</label>
+                                                                <input class="form-control" th:field="*{cardioName2}" disabled
+                                                                       th:errorclass="is-invalid" type="text"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-group">
+                                                                <label>CardioName3</label>
+                                                                <input class="form-control" th:field="*{cardioName3}" disabled
+                                                                       th:errorclass="is-invalid" type="text"/>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" th:type="submit" class="btn btn-primary">Add
+                                                        Exercise
+                                                    </button>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <h3><i class="fas fa-table"></i>Exercises table</h3>
                             </div>
 
@@ -55,7 +183,7 @@
                                             <th>Character</th>
                                             <th>Creator</th>
                                             <th>Date</th>
-                                            <th>Action</th>
+                                            <th sec:authorize="hasRole('ADMIN')">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -66,7 +194,18 @@
                                             <th th:text="*{exercise.character.character}">Character</th>
                                             <th th:text="*{exercise.creator.login}">creator</th>
                                             <th th:text="*{exercise.createDate}">Date</th>
-                                            <th>Action</th>
+                                            <td scope="row" class="text-center" style="width: 10px;"
+                                                sec:authorize="hasRole('ADMIN')">
+                                                <div class="btn-group me-2" role="group" aria-label="First group">
+                                                    <a class="btn btn-success"
+                                                       th:href="@{/exercise/{id}(id = ${exercise.exerciseId})}"><i
+                                                            class="bi bi-pencil-square"></i></a>
+                                                    <form th:action="@{/exercise/{id}/delete (id=*{exercise.exerciseId})}" th:method="delete">
+                                                        <button class="btn btn-danger" type="Submit"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </div>
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -105,6 +244,14 @@
 <script>
     $(document).on('ready', function () {
         $('#exerciseTable').DataTable();
+
+        $('#isCardio').on('change', function () {
+            if(!Boolean($(this).val())) {
+                $('#CardioNames input').prop('disabled', true);
+            }else{
+                $('#CardioNames input').prop('disabled', false);
+            }
+        });
     });
 </script>
 <!-- END Java Script for this page -->
