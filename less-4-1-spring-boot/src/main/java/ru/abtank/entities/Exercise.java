@@ -18,10 +18,10 @@ public class Exercise implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "exercise_id")
-    private Integer exerciseId;
+    private Integer id;
 
     @Column(name = "exercise", unique = true, nullable = false)
-    private String exercise;
+    private String name;
 
     @Column(name = "descr")
     private String descr;
@@ -65,8 +65,4 @@ public class Exercise implements Serializable {
         this.createDate = new Date();
     }
 
-    public Exercise(String exercise, String descr) {
-        this.exercise = exercise;
-        this.descr = descr;
-    }
 }

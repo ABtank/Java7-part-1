@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout ,Integer>, JpaSpecificationExecutor<Workout> {
 
-    Optional<Workout> findByWorkout(String workout);
-    Optional<Workout> findByWorkoutLike(String workoutPattern);
+    Optional<Workout> findByName(String workout);
+    Optional<Workout> findByNameLike(String workoutPattern);
 }

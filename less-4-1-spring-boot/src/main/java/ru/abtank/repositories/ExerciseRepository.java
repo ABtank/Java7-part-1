@@ -13,6 +13,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise ,Integer>, Jp
 
 //    Optional<ExerciseDto> findByExerciseId (Integer id);
 
-    Optional<Exercise> findByExercise(String exercise);
-    Optional<Exercise> findByExerciseLike(String exercisePattern);
+    Optional<Exercise> findByName(String exercise);
+    Optional<Exercise> findByNameLike(String exercisePattern);
 }

@@ -2,63 +2,191 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div th:replace="fragments/head :: head"></div>
-<body>
-<div th:replace="fragments/nav :: nav"></div>
 
-<div class="container">
-    <div th:replace="fragments/message :: msg"></div>
-    <div class="row py-2">
-        <div class="col-12">
-            <form th:action="@{/user/update}" method="post" th:object="${user}">
-                <div th:replace="fragments/message :: error_message"></div>
-                <input th:type="hidden" th:field="*{id}" th:errorclass="is-invalid" >
-                <div class="form-group">
-                    <label>Login</label>
-                    <input type="text" class="form-control" th:field="*{login}" th:errorclass="is-invalid" placeholder="Enter login">
-                    <small id="loginError" class="form-text alert-danger"
-                           th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error
-                    </small>
-                    <small id="loginExist" class="form-text alert-danger"
-                           th:if="${login_exist}" th:text="*{login+' уже занят'}">loginExist
-                    </small>
+<body class="adminbody">
+
+<div id="main">
+    <!-- top bar navigation -->
+    <div th:replace="fragments/nav :: top_bar_navigation"></div>
+    <!-- End Navigation -->
+    <!-- Left Sidebar -->
+    <div th:replace="fragments/sidebar :: left_sidebar"></div>
+    <!-- End Sidebar -->
+
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+                <div class="card-header">
+
+                                <span class="pull-right">
+                                <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#modal_add_exercise">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i> Add new Exercise</button>
+                                </span>
+                    <div class="modal fade custom-modal" tabindex="-1" role="dialog"
+                         aria-labelledby="modal_add_exercise" aria-hidden="true" id="modal_add_exercise">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <form th:action="@{/exercise/update}" method="post" th:object="${exercise}"
+                                      enctype="multipart/form-data">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Add new Exercise</h5>
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span aria-hidden="true">&times;</span>
+                                            <span class="sr-only">Close</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <input th:type="hidden" th:field="*{id}">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Exercise (required)</label>
+                                                    <input class="form-control" th:field="*{name}" th:errorclass="is-invalid" type="text"
+                                                           required/>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Category (required)</label>
+                                                    <select th:field="*{category}"
+                                                            class="form-control" required>
+                                                        <option value=""></option>
+                                                        <optgroup label="Category">
+                                                            <option th:each="category : ${categories}"
+                                                                    th:text="${category.name}"
+                                                                    th:value="${category.id}"
+                                                                    th:selected="${exercise.category?.equals(category)}"></option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <label>Description</label>
+                                                    <textarea class="form-control" rows="2"
+                                                              th:field="*{descr}" th:errorclass="is-invalid"
+                                                              type="text"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Character</label>
+                                                    <select th:field="*{character}"
+                                                            class="form-control" required>
+                                                        <option value=""></option>
+                                                        <optgroup label="Character">
+                                                            <option th:each="character : ${characters}"
+                                                                    th:text="${character.name}"
+                                                                    th:value="${character.id}"
+                                                                    th:selected="${exercise.character?.equals(character)}"></option>
+                                                        </optgroup>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label>Is Cardio</label>
+                                                    <select th:field="*{isCardio}"
+                                                            class="form-control" >
+                                                        <option value="false">Not</option>
+                                                        <option value="true">Yes</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row " id="CardioNames">
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label>CardioName1</label>
+                                                    <input class="form-control" th:field="*{cardioName1}" disabled
+                                                           th:errorclass="is-invalid" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label>CardioName2</label>
+                                                    <input class="form-control" th:field="*{cardioName2}" disabled
+                                                           th:errorclass="is-invalid" type="text"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <label>CardioName3</label>
+                                                    <input class="form-control" th:field="*{cardioName3}" disabled
+                                                           th:errorclass="is-invalid" type="text"/>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" th:type="submit" class="btn btn-primary">Add
+                                            Exercise
+                                        </button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <h3><i class="fas fa-table"></i>Exercises table</h3>
                 </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" class="form-control" th:field="*{email}" th:errorclass="is-invalid" placeholder="Enter email">
-                    <small id="emailError" class="form-text alert-danger"
-                           th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Validation error
-                    </small>
-                </div>
-                <div class="form-group">
-                    <label for="roles">User roles</label>
-                    <select multiple class="form-control" id="roles" th:field="*{roles}" required>
-                        <option th:each="role : ${roles}"
-                                th:text="${role.name}"
-                                th:value="${role.id}"
-                                th:selected="${user.roles?.contains(role)}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control" th:field="*{password}" th:errorclass="is-invalid" placeholder="Enter password">
-                    <small id="passwordError" class="form-text alert-danger"
-                           th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Validation error</small>
-                </div>
-                <div class="form-group">
-                    <label>matchingPassword</label>
-                    <input type="password" class="form-control" th:field="*{matchingPassword}" th:classappend="${#fields.hasErrors('matchingPassword')}?'is-invalid'"
-                           placeholder="Confirm password">
-                    <small id="matchingPasswordError" class="form-text alert-danger"
-                           th:if="${#fields.hasErrors('matchingPassword')}" th:errors="*{matchingPassword}">Validation error</small>
-                </div>
-                <button type="Submit" class="btn btn-primary">Submit</button>
-            </form>
+
+
+
+            </div>
+
+
         </div>
+        <!-- END content -->
+
     </div>
+    <!-- END content-page -->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script th:replace="fragments/footer :: core_scripts"></script>
+
 </div>
+<!-- END main -->
 
+<script th:replace="fragments/footer :: datatables_scripts"></script>
 
-<div th:replace="fragments/message :: msg_close"></div>
-<script th:replace="fragments/footer :: core_scripts"></script>
+<script>
+    $(document).on('ready', function () {
+        $('#exerciseTable').DataTable();
+
+        $('#isCardio').on('change', function () {
+            if (!Boolean($(this).val())) {
+                $('#CardioNames input').prop('disabled', true);
+            } else {
+                $('#CardioNames input').prop('disabled', false);
+            }
+        });
+    });
+</script>
+<!-- END Java Script for this page -->
+
 </body>
+
 </html>

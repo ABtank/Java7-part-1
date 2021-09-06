@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category ,Integer>, JpaSpecificationExecutor<Category> {
 
-    Optional<Category> findByCategory(String category);
-    Optional<Category> findByCategoryLike(String categoryPattern);
+    Optional<Category> findByName(String category);
+    Optional<Category> findByNameLike(String categoryPattern);
 }

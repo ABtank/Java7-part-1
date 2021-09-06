@@ -18,7 +18,7 @@ public class Set implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "set_id")
-    private Integer setId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn (name = "workout_id", nullable = false)

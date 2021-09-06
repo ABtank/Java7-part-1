@@ -18,10 +18,10 @@ public class Workout implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "workout_id")
-    private Integer workoutId;
+    private Integer id;
 
     @Column (name = "workout", nullable = false)
-    private String workout;
+    private String name;
 
     @Column (name = "descr")
     private String descr;

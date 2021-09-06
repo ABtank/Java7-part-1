@@ -9,12 +9,12 @@ public final class ExerciseSpecification {
         return (root,quary,builder) -> builder.isTrue(builder.literal(true));
     }
 
-    public static Specification<Exercise> findByExercise(String exercise){
-        return (root,quary,builder) -> builder.like(root.get("exercise"), exercise);
+    public static Specification<Exercise> findByName(String name){
+        return (root,quary,builder) -> builder.like(root.get("name"), name);
     }
 
-    public static Specification<Exercise> exerciseContains(String exercise){
-        return (root,quary,builder) -> builder.like(root.get("exercise"), "%"+exercise+"%");
+    public static Specification<Exercise> nameContains(String name){
+        return (root,quary,builder) -> builder.like(root.get("name"), "%"+name+"%");
     }
 
 }

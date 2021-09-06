@@ -16,10 +16,10 @@ public class Mode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mode_id")
-    private Integer modeId;
+    private Integer id;
 
     @Column(name = "mode", nullable = false, unique = true)
-    private String mode;
+    private String name;
 
     @Column(name = "is_start")
     private Boolean is_start;

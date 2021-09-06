@@ -61,7 +61,7 @@ public class ExerciseController {
         List<Exercise> exercises = exerciseRepository.findAll();
         List<Category> categories = categoryRepository.findAll();
         List<Character> characters = characterRepository.findAll();
-        Exercise exercise = new Exercise("test","descr");
+        Exercise exercise = new Exercise();
         LOGGER.info("//////////////"+exercises.get(0));
         model.addAttribute("nav_selected","nav_exercises");
         model.addAttribute("exercise", exercise);
@@ -74,9 +74,13 @@ public class ExerciseController {
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) {
         Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->new NotFoundException(Exercise.class.getSimpleName(), id,"not Found!"));
+        List<Category> categories = categoryRepository.findAll();
+        List<Character> characters = characterRepository.findAll();
         LOGGER.info("EDIT Exercise: " + exercise.toString());
         LOGGER.info("CREATOR Exercise: " + exercise.getCreator().getLogin());
         model.addAttribute("exercise", exercise);
+        model.addAttribute("categories", categories);
+        model.addAttribute("characters", characters);
         model.addAttribute("nav_selected", "nav_exercises");
         return "exercise";
     }
@@ -90,27 +94,27 @@ public class ExerciseController {
     }
 
     @PostMapping("/update")
-    public String updateExercise(Model  model, @ModelAttribute("exercise") @Valid Exercise exercise, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+    public String updateExercise(@ModelAttribute("exercise") Exercise exercise, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         String msg;
         LOGGER.info(principal.getName()+" START UPDATE OR INSERT EXERCISE: " + exercise.toString());
-        LOGGER.info("CLASS EXERCISE: " + exercise.getExercise().getClass());
+        LOGGER.info("CLASS EXERCISE: " + exercise.getName().getClass());
         User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
         LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT EXERCISE: " + exercise.toString());
         if (bindingResult.hasErrors()) {
-            return (exercise.getExerciseId() != null)?"exercise":"exercises";
+            return (exercise.getId() != null)?"exercise":"exercises";
         }
         Specification<Exercise> spec = ExerciseSpecification.trueLiteral();
-        spec = spec.and(ExerciseSpecification.findByExercise(exercise.getExercise()));
+        spec = spec.and(ExerciseSpecification.findByName(exercise.getName()));
         List<Exercise> chekEquals = exerciseRepository.findAll(spec);
         if(!chekEquals.isEmpty()){
             msg = "Exercise already exists";
             redirectAttributes.addFlashAttribute("exception", msg);
-            return (exercise.getExerciseId() != null)?"exercise":"redirect:/exercise";
+            return (exercise.getId() != null)?"exercise":"redirect:/exercise";
         }
         exercise.setCreator(creator);
-        msg = (exercise.getExerciseId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update Exercise " : creator.getLogin()+" "+creator.getId()+" Susses create exercise ";
+        msg = (exercise.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update Exercise " : creator.getLogin()+" "+creator.getId()+" Susses create exercise ";
         exerciseRepository.save(exercise);
-        msg += exercise.getExercise();
+        msg += exercise.getName();
         redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/exercise";
     }

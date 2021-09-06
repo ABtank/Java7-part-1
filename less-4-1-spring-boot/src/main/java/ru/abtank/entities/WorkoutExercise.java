@@ -16,11 +16,11 @@ public class WorkoutExercise implements Serializable {
     private static final long SerialVersionUID = 1153699633365897601L;
 
     @EmbeddedId
-    private WorkoutExerciseId workoutExerciseId;
+    private WorkoutExerciseId id;
 
     @ManyToOne
     @JoinColumn(name = "mode_id", nullable = false)
-    private Mode modeId;
+    private Mode mode;
 
     @Column (name = "ordinal", nullable = false)
     private Integer ordinal;

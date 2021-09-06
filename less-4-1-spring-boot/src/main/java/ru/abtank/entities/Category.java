@@ -17,11 +17,11 @@ public class Category implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    private Integer categoryId;
+    private Integer id;
 
     @Column (name = "category", nullable = false, unique = true)
     @NotBlank (message = "Укажите категорию")
-    private String category;
+    private String name;
 
     @Column (name = "descr")
     private String descr;

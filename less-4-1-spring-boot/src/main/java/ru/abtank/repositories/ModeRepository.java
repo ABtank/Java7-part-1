@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ModeRepository extends JpaRepository<Mode ,Integer>, JpaSpecificationExecutor<Mode> {
 
-    Optional<Mode> findByMode(String mode);
-    Optional<Mode> findByModeLike(String modePattern);
+    Optional<Mode> findByName(String mode);
+    Optional<Mode> findByNameLike(String modePattern);
 }

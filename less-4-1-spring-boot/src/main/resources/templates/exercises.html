@@ -63,12 +63,12 @@
                                                 </div>
 
                                                 <div class="modal-body">
-                                                    <input th:type="hidden" th:field="*{exerciseId}">
+                                                    <input th:type="hidden" th:field="*{id}">
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <div class="form-group">
                                                                 <label>Exercise (required)</label>
-                                                                <input class="form-control" th:field="*{exercise}" th:errorclass="is-invalid" type="text"
+                                                                <input class="form-control" th:field="*{name}" th:errorclass="is-invalid" type="text"
                                                                        required/>
                                                             </div>
                                                         </div>
@@ -81,9 +81,9 @@
                                                                     <option value=""></option>
                                                                     <optgroup label="Category">
                                                                         <option th:each="category : ${categories}"
-                                                                                th:text="${category.category}"
-                                                                                th:value="${category.categoryId}"
-                                                                                th:selected="${exercise.category?.contains(category)}"></option>
+                                                                                th:text="${category.name}"
+                                                                                th:value="${category.id}"
+                                                                                th:selected="${exercise.category?.equals(category)}"></option>
                                                                     </optgroup>
                                                                 </select>
                                                             </div>
@@ -110,9 +110,9 @@
                                                                     <option value=""></option>
                                                                     <optgroup label="Character">
                                                                         <option th:each="character : ${characters}"
-                                                                                th:text="${character.character}"
-                                                                                th:value="${character.characterId}"
-                                                                                th:selected="${exercise.character?.contains(character)}"></option>
+                                                                                th:text="${character.name}"
+                                                                                th:value="${character.id}"
+                                                                                th:selected="${exercise.character?.equals(character)}"></option>
                                                                     </optgroup>
                                                                 </select>
                                                             </div>
@@ -122,7 +122,7 @@
                                                                 <label>Is Cardio</label>
                                                                 <select th:field="*{isCardio}"
                                                                         class="form-control" >
-                                                                    <option value="">Not</option>
+                                                                    <option value="false">Not</option>
                                                                     <option value="true">Yes</option>
                                                                 </select>
                                                             </div>
@@ -188,19 +188,19 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="exercise : ${exercises}">
-                                            <th th:text="*{exercise.exerciseId}">id</th>
-                                            <th th:text="*{exercise.exercise}">Exercise</th>
-                                            <th th:text="*{exercise.category.category}">Category</th>
-                                            <th th:text="*{exercise.character.character}">Character</th>
+                                            <th th:text="*{exercise.id}">id</th>
+                                            <th th:text="*{exercise.name}">Exercise</th>
+                                            <th th:text="*{exercise.category.name}">Category</th>
+                                            <th th:text="*{exercise.character.name}">Character</th>
                                             <th th:text="*{exercise.creator.login}">creator</th>
                                             <th th:text="*{exercise.createDate}">Date</th>
                                             <td scope="row" class="text-center" style="width: 10px;"
                                                 sec:authorize="hasRole('ADMIN')">
                                                 <div class="btn-group me-2" role="group" aria-label="First group">
                                                     <a class="btn btn-success"
-                                                       th:href="@{/exercise/{id}(id = ${exercise.exerciseId})}"><i
+                                                       th:href="@{/exercise/{id}(id = ${exercise.id})}"><i
                                                             class="bi bi-pencil-square"></i></a>
-                                                    <form th:action="@{/exercise/{id}/delete (id=*{exercise.exerciseId})}" th:method="delete">
+                                                    <form th:action="@{/exercise/{id}/delete (id=*{exercise.id})}" th:method="delete">
                                                         <button class="btn btn-danger" type="Submit"><i
                                                                 class="fas fa-trash"></i></button>
                                                     </form>

@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface CharacterRepository extends JpaRepository<Character ,Integer>, JpaSpecificationExecutor<Character> {
 
-    Optional<Character> findByCharacter(String character);
-    Optional<Character> findByCharacterLike(String characterPattern);
+    Optional<Character> findByName(String character);
+    Optional<Character> findByNameLike(String characterPattern);
 }

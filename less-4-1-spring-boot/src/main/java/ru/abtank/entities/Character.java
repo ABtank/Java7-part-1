@@ -17,11 +17,11 @@ public class Character implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "character_id")
-    private Integer characterId;
+    private Integer id;
 
     @Column (name = "character", nullable = false, unique = true)
     @NotBlank
-    private String character;
+    private String name;
 
     @Column (name = "descr")
     private String descr;
