@@ -13,11 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.abtank.entities.Role;
-import ru.abtank.entities.User;
-import ru.abtank.repositories.RoleRepository;
-import ru.abtank.repositories.UserRepository;
-import ru.abtank.repositories.UserSpecification;
+import ru.abtank.persist.entities.Role;
+import ru.abtank.persist.entities.User;
+import ru.abtank.persist.repositories.RoleRepository;
+import ru.abtank.persist.repositories.UserRepository;
+import ru.abtank.persist.repositories.UserSpecification;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -51,11 +51,12 @@ public class UserController {
                            @RequestParam("page") Optional<Integer> page,
                            @RequestParam("size") Optional<Integer> size,
                            @RequestParam("sort") Optional<String> sort,
-                           @RequestParam("direction") Optional<String> direction
+                           @RequestParam("direction") Optional<String> direction,
+                           Principal principal
     ) {
         LOGGER.info("check_login_filter {} \n check_email_filter {} \n", check_login_filter, check_email_filter);
 
-       Specification<User> spec = UserSpecification.trueLiteral();
+        Specification<User> spec = UserSpecification.trueLiteral();
         if (check_login_filter != null && !login_filter.isEmpty()) {
             spec = spec.and(UserSpecification.loginContains(login_filter));
         }
@@ -63,11 +64,12 @@ public class UserController {
             spec = spec.and(UserSpecification.emailContains(email_filter));
         }
 
-        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), direction.isEmpty() ? Sort.Direction.ASC : Sort.Direction.DESC, sort.orElse("id"));
+//        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(10), direction.isEmpty() ? Sort.Direction.ASC : Sort.Direction.DESC, sort.orElse("id"));
+//        Page<User> userPage = userRepository.findAll(spec, pageRequest);
+//        model.addAttribute("usersPage", userPage);
 
-        Page<User> userPage = userRepository.findAll(spec, pageRequest);
+        List<User> userPage = userRepository.findAll(spec);
         model.addAttribute("usersPage", userPage);
-
         User user = new User();
         List<Role> roles = roleRepository.findAll();
         model.addAttribute("user", user);
@@ -84,7 +86,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) throws SQLException {
-        User user = userRepository.findById(id).orElseThrow(()->new NotFoundException(User.class.getSimpleName(), id,"not Found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(User.class.getSimpleName(), id, "not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
         LOGGER.info("CREATOR USER: " + user.getCreator().getLogin());
         List<Role> roles = roleRepository.findAll();
@@ -95,32 +97,34 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateUser(Model  model, @ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
+    public String updateUser(Model model, @ModelAttribute("user") @Valid User user, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         String msg;
-        LOGGER.info(principal.getName()+" START UPDATE OR INSERT USER: " + user.toString());
-        User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
-        LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT USER: " + user.toString());
+        LOGGER.info(principal.getName() + " START UPDATE OR INSERT USER: " + user.toString());
+        User creator = userRepository.findByLogin(principal.getName()).orElseThrow(() -> new NotFoundException("creator not Found!"));
+        LOGGER.info(creator.getLogin() + " " + creator.getId() + " START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
-            return (user.getId() != null)?"redirect:/user/"+user.getId():"users";
+            return (user.getId() != null) ? "redirect:/user/" + user.getId() : "users";
         }
         Specification<User> spec = UserSpecification.trueLiteral();
         spec = spec.and(UserSpecification.findBylogin(user.getLogin()));
         spec = spec.or(UserSpecification.findByEmail(user.getEmail()));
         List<Integer> chekEquals = userRepository.findAll(spec).stream().map(User::getId).collect(Collectors.toList());
         chekEquals.remove(user.getId());
-        if(!chekEquals.isEmpty()){
+        LOGGER.info("!chekEquals.isEmpty() {}", !chekEquals.isEmpty());
+        if (!chekEquals.isEmpty()) {
             msg = "Login or email already exists";
             redirectAttributes.addFlashAttribute("exception", msg);
-            return (user.getId() != null)?"redirect:/user/"+user.getId():"redirect:/user";
+            return (user.getId() != null) ? "redirect:/user/" + user.getId() : "redirect:/user";
         }
         if (!user.getPassword().equals(user.getMatchingPassword())) {
             bindingResult.rejectValue("matchingPassword", "error.matchingPassword", "пароль не совпал");
-            return (user.getId() != null)?"redirect:/user/"+user.getId():"redirect:/user";
+            return (user.getId() != null) ? "redirect:/user/" + user.getId() : "redirect:/user";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreator(creator);
-        msg = (user.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update User " : creator.getLogin()+" "+creator.getId()+" Susses create User ";
+        msg = (user.getId() != null) ? creator.getLogin() + " " + creator.getId() + " Susses update User " : creator.getLogin() + " " + creator.getId() + " Susses create User ";
         userRepository.save(user);
+        LOGGER.info("SAVE SAVE SAVE");
         msg += user.getLogin();
         redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/user";

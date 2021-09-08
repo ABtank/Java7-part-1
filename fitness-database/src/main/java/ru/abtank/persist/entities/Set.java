@@ -1,4 +1,4 @@
-package ru.abtank.entities;
+package ru.abtank.persist.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class Set implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "set_id")
+    @Column(name = "set_id")
     private Integer id;
 
     @ManyToOne

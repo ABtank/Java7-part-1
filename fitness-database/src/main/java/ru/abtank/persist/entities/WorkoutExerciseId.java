@@ -1,9 +1,10 @@
-package ru.abtank.entities;
+package ru.abtank.persist.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
@@ -12,7 +13,7 @@ import java.io.Serializable;
 public class WorkoutExerciseId implements Serializable {
     private static final long SerialVersionUID = 3022017542654153252L;
 
-    @Column (name = "workout_id", nullable = false)
+    @Column(name = "workout_id", nullable = false)
     private Long workoutId;
 
     @Column (name = "exercise_id", nullable = false)

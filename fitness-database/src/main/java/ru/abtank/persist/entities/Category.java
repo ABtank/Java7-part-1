@@ -1,4 +1,4 @@
-package ru.abtank.entities;
+package ru.abtank.persist.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +8,14 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
-@Table (name = "categories")
+@Table(name = "categories")
 @Data
 @NoArgsConstructor
 public class Category implements Serializable {
     private static final long SerialVersionUID = 1719796177095347955L;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Integer id;
 

@@ -1,4 +1,4 @@
-package ru.abtank.entities;
+package ru.abtank.persist.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "id")
+    @Column(name = "id")
     private Integer id;
 
     @Column (name = "name", unique = true, nullable = false)

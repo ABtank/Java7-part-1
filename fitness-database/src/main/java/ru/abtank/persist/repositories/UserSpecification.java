@@ -1,7 +1,7 @@
-package ru.abtank.repositories;
+package ru.abtank.persist.repositories;
 
 import org.springframework.data.jpa.domain.Specification;
-import ru.abtank.entities.User;
+import ru.abtank.persist.entities.User;
 
 public final class UserSpecification {
 //    аналог where 1=1

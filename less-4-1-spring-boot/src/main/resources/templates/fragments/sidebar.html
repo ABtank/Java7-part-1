@@ -28,6 +28,7 @@
                        th:selected="${nav_selected} == 'nav_users'">
                         <i class="fas fa-user"></i>
                         <span> Users </span>
+                        <span class="label radius-circle bg-primary float-right" th:text="${users_count}">9</span>
                     </a>
                 </li>
 
@@ -70,7 +71,9 @@
                         <li th:classappend="${nav_selected} == 'nav_exercises' ? active :' '">
                             <a th:classappend="${nav_selected} == 'nav_exercises' ? active :' '"
                                th:selected="${nav_selected} == 'nav_exercises'"
-                               th:href="@{/exercise}">Упражнения</a>
+                               th:href="@{/exercise}">
+                                <span class="label radius-circle bg-primary float-right" th:text="${exercises_count}">9</span>
+                                Упражнения</a>
                         </li>
                     </ul>
                 </li>

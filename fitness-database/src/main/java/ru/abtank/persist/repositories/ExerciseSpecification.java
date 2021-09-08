@@ -1,7 +1,7 @@
-package ru.abtank.repositories;
+package ru.abtank.persist.repositories;
 
 import org.springframework.data.jpa.domain.Specification;
-import ru.abtank.entities.Exercise;
+import ru.abtank.persist.entities.Exercise;
 
 public final class ExerciseSpecification {
 //    аналог where 1=1

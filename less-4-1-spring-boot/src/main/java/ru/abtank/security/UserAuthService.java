@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-import ru.abtank.entities.Role;
-import ru.abtank.repositories.UserRepository;
+import ru.abtank.persist.entities.Role;
+import ru.abtank.persist.repositories.UserRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

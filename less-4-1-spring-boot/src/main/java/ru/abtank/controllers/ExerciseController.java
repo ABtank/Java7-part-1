@@ -10,12 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.dto.ExerciseDto;
-import ru.abtank.entities.Category;
-import ru.abtank.entities.Character;
-import ru.abtank.entities.Exercise;
-import ru.abtank.entities.Role;
-import ru.abtank.entities.User;
-import ru.abtank.repositories.*;
+import ru.abtank.persist.entities.Category;
+import ru.abtank.persist.entities.Character;
+import ru.abtank.persist.entities.Exercise;
+import ru.abtank.persist.entities.Role;
+import ru.abtank.persist.entities.User;
+import ru.abtank.persist.repositories.*;
 
 import javax.validation.Valid;
 import java.security.Principal;

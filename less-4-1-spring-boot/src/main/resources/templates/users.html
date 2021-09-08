@@ -184,7 +184,8 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="user : ${usersPage.content}">
+<!--                                        <tr th:each="user : ${usersPage.content}">-->
+                                        <tr th:each="user : ${usersPage}">
                                             <th scope="row" th:text="*{user.id}">1</th>
                                             <td scope="row" th:text="*{user.login}">User Login</td>
                                             <td scope="row">

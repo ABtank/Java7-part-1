@@ -1,7 +1,7 @@
-package ru.abtank.repositories;
+package ru.abtank.persist.repositories;
 
 import org.springframework.data.jpa.domain.Specification;
-import ru.abtank.entities.Role;
+import ru.abtank.persist.entities.Role;
 
 public final class RoleSpecification {
 //    аналог where 1=1

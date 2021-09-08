@@ -235,16 +235,17 @@
                 </div>
 
                 <!-- item-->
-                <a href="profile.html" class="dropdown-item notify-item">
+                <a th:href="@{/user/{id}(id=*{usr_id})}" class="dropdown-item notify-item" sec:authorize="isAuthenticated()">
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </a>
 
                 <!-- item-->
-                <a href="#" class="dropdown-item notify-item">
-                    <i class="fas fa-power-off"></i>
-                    <span>Logout</span>
-                </a>
+                <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="POST" sec:authorize="isAuthenticated()">
+                    <button class="btn btn-outline-success dropdown-item notify-item"><i class="fas fa-power-off"></i>Logout
+                        <span sec:authentication="principal.username"></span>
+                    </button>
+                </form>
             </div>
         </li>
 

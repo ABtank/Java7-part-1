@@ -1,4 +1,4 @@
-package ru.abtank.entities;
+package ru.abtank.persist.entities;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,21 +9,19 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "workouts_exercises")
+@Table(name = "workouts")
 @Data
 @NoArgsConstructor
-public class WorkoutExercise implements Serializable {
-    private static final long SerialVersionUID = 1153699633365897601L;
+public class Workout implements Serializable {
+    private static final long SerialVersionUID = -8475703101738989687L;
 
-    @EmbeddedId
-    private WorkoutExerciseId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "workout_id")
+    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "mode_id", nullable = false)
-    private Mode mode;
-
-    @Column (name = "ordinal", nullable = false)
-    private Integer ordinal;
+    @Column (name = "workout", nullable = false)
+    private String name;
 
     @Column (name = "descr")
     private String descr;
@@ -37,7 +35,6 @@ public class WorkoutExercise implements Serializable {
     @Column(name = "dt_create", updatable=false)
     private Date createDate;
 
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -45,5 +42,4 @@ public class WorkoutExercise implements Serializable {
     public void setCreateDate() {
         this.createDate = new Date();
     }
-
 }
