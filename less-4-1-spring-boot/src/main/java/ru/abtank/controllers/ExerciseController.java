@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.abtank.dto.ExerciseDto;
+import ru.abtank.persist.dto.ExerciseDto;
 import ru.abtank.persist.entities.Category;
 import ru.abtank.persist.entities.Character;
 import ru.abtank.persist.entities.Exercise;
@@ -48,13 +48,18 @@ public class ExerciseController {
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    //    @GetMapping
-//    @ResponseBody
-//    public ExerciseDto exerciseAll(){
-//        ExerciseDto exerciseList = exerciseRepository.findByExerciseId(1).get();
-//        System.out.println("///////////////////"+exerciseList);
-//        return exerciseList;
-//    }
+
+//    работа с DTO
+    @GetMapping("/json")
+    @ResponseBody // возвращает json
+    public List <ExerciseDto> exerciseAll(){
+         System.out.println("/////////ResponseBody//////////");
+            ExerciseDto exercise = exerciseRepository.findById(1).map(ExerciseDto:: new).get();
+            List<ExerciseDto> exerciseDtos = exerciseRepository.findAll().stream().map(ExerciseDto::new).collect(Collectors.toList());
+            List<ExerciseDto> exerciseDtos2 = exerciseRepository.findAllExercise();
+            System.out.println("/////////ExerciseDto//////////"+exerciseDtos2);
+        return exerciseDtos2;
+    }
 
     @GetMapping
     public String exerciseAll(Model model){
