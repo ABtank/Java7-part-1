@@ -68,12 +68,6 @@
                                                                 <label>Login (required)</label>
                                                                 <input class="form-control" th:field="*{login}" th:errorclass="is-invalid" type="text"
                                                                        required/>
-                                                                <small id="loginError" class="form-text alert-danger"
-                                                                       th:if="${#fields.hasErrors('login')}" th:errors="*{login}">Validation error
-                                                                </small>
-                                                                <small id="loginExist" class="form-text alert-danger"
-                                                                       th:if="${login_exist}" th:text="*{login+' уже занят'}">loginExist
-                                                                </small>
                                                             </div>
                                                         </div>
 
@@ -83,9 +77,6 @@
                                                                 <label>Email (required)</label>
                                                                 <input class="form-control" th:field="*{email}" th:errorclass="is-invalid" type="email"
                                                                        required/>
-                                                                <small id="emailError" class="form-text alert-danger"
-                                                                       th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Validation error
-                                                                </small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -115,18 +106,12 @@
                                                         <div class="col-lg-6">
                                                             <div class="form-group">
                                                                 <label>Role</label>
-                                                                <select multiple th:field="*{roles}" class="form-control" required>
-                                                                    <option value="">- select -</option>
-                                                                    <optgroup label="Staff member">
-                                                                        <option th:each="role : ${roles}"
-                                                                                th:text="${role.name}"
-                                                                                th:value="${role.id}"
-                                                                                th:selected="${user.roles?.contains(role)}"></option>
-                                                                    </optgroup>
-
-                                                                    <optgroup label="Registered member">
-                                                                        <option value="4">User</option>
-                                                                    </optgroup>
+                                                                <select multiple th:field="*{roles}"
+                                                                        class="form-control" required>
+                                                                    <option th:each="role : ${roles}"
+                                                                            th:text="${role.name}"
+                                                                            th:value="${role.id}"
+                                                                            th:selected="${user.roles?.contains(role)}"></option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -258,7 +243,8 @@
 <!-- END main -->
 
 <script th:replace="fragments/footer :: datatables_scripts"></script>
-<div th:replace="fragments/message :: msg_close"></div>
+<th:block th:replace="fragments/message :: msg_close"></th:block>
+
 <script>
     $(document).on('ready', function () {
         $('#usersTable').DataTable();

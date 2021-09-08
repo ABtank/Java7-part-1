@@ -101,20 +101,21 @@ public class UserController {
         User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
         LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT USER: " + user.toString());
         if (bindingResult.hasErrors()) {
-            return (user.getId() != null)?"user":"users";
+            return (user.getId() != null)?"redirect:/user/"+user.getId():"users";
         }
         Specification<User> spec = UserSpecification.trueLiteral();
         spec = spec.and(UserSpecification.findBylogin(user.getLogin()));
         spec = spec.or(UserSpecification.findByEmail(user.getEmail()));
-        List<User> chekEquals = userRepository.findAll(spec);
+        List<Integer> chekEquals = userRepository.findAll(spec).stream().map(User::getId).collect(Collectors.toList());
+        chekEquals.remove(user.getId());
         if(!chekEquals.isEmpty()){
             msg = "Login or email already exists";
             redirectAttributes.addFlashAttribute("exception", msg);
-            return (user.getId() != null)?"user":"redirect:/user";
+            return (user.getId() != null)?"redirect:/user/"+user.getId():"redirect:/user";
         }
         if (!user.getPassword().equals(user.getMatchingPassword())) {
             bindingResult.rejectValue("matchingPassword", "error.matchingPassword", "пароль не совпал");
-            return (user.getId() != null)?"user":"redirect:/user";
+            return (user.getId() != null)?"redirect:/user/"+user.getId():"redirect:/user";
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setCreator(creator);

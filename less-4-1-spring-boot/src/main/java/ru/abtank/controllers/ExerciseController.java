@@ -97,20 +97,24 @@ public class ExerciseController {
     public String updateExercise(@ModelAttribute("exercise") Exercise exercise, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         String msg;
         LOGGER.info(principal.getName()+" START UPDATE OR INSERT EXERCISE: " + exercise.toString());
-        LOGGER.info("CLASS EXERCISE: " + exercise.getName().getClass());
         User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
-        LOGGER.info(creator.getLogin()+" "+creator.getId()+" START UPDATE OR INSERT EXERCISE: " + exercise.toString());
         if (bindingResult.hasErrors()) {
-            return (exercise.getId() != null)?"exercise":"exercises";
+            return (exercise.getId() != null)?"redirect:/exercise"+exercise.getId():"redirect:/exercise";
         }
+//        Проверка на уникальность имени
         Specification<Exercise> spec = ExerciseSpecification.trueLiteral();
         spec = spec.and(ExerciseSpecification.findByName(exercise.getName()));
         List<Exercise> chekEquals = exerciseRepository.findAll(spec);
-        if(!chekEquals.isEmpty()){
+        LOGGER.info("LIST EXERCISES {}", chekEquals.stream().map(Exercise::getName).collect(Collectors.joining(", ")));
+        List <Integer> checkId = chekEquals.stream().map(Exercise::getId).collect(Collectors.toList());
+        checkId.remove(exercise.getId());
+        LOGGER.info("!chekEquals.isEmpty() {} {}", !checkId.isEmpty(), checkId);
+        if(!checkId.isEmpty()){
             msg = "Exercise already exists";
             redirectAttributes.addFlashAttribute("exception", msg);
-            return (exercise.getId() != null)?"exercise":"redirect:/exercise";
+            return (exercise.getId() != null)?"redirect:/exercise/"+exercise.getId():"redirect:/exercise";
         }
+
         exercise.setCreator(creator);
         msg = (exercise.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update Exercise " : creator.getLogin()+" "+creator.getId()+" Susses create exercise ";
         exerciseRepository.save(exercise);

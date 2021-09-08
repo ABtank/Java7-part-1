@@ -36,7 +36,7 @@
                 <!-- end row -->
 
                 <div class="row">
-
+                    <div th:replace="fragments/message :: msg"></div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="card mb-3">
                             <div class="card-header">
@@ -240,6 +240,7 @@
 <!-- END main -->
 
 <script th:replace="fragments/footer :: datatables_scripts"></script>
+<script th:replace="fragments/message :: msg_close"></script>
 
 <script>
     $(document).on('ready', function () {
