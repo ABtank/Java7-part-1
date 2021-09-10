@@ -5,10 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.abtank.entities.*;
-import ru.abtank.entities.Character;
 
-import java.io.ObjectStreamClass;
 
 @SpringBootApplication
 public class Less41SpringBootApplication {

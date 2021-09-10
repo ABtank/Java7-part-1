@@ -170,6 +170,91 @@
                             </div>
 
                             <div class="card-body">
+
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th style="min-width:300px">User details</th>
+                                            <th style="width:120px">Role</th>
+                                            <th>Create/Update</th>
+                                            <th style="min-width:110px;">Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${usersPage.content}">
+                                            <td>
+                                                <div class="user_avatar_list d-none d-none d-lg-block"><img alt="image" th:src="@{/images/avatars/avatar_small.png}" /></div>
+                                                <h4 th:text="*{user.login}">Demo Administrator</h4>
+                                                <p th:text="'ID:'+*{user.id}" >webmaster@website.com</p>
+                                                <p><a th:href="'mailto:' + *{user.email}" th:text="*{user.email}">Email</a></p>
+                                                <p>Bio: Nulla cursus maximus lacus at efficitur. In lobortis ante vitae nulla semper, in volutpat libero aliquet. Morbi sit amet nibh vitae metus interdum finibus sed nec nisl nec sidios.</p>
+                                            </td>
+                                            <td>
+                                                <p th:each="role : *{user.roles}">
+                                                    <span th:text="*{role.name}">User role</span>
+                                                </p>
+                                            </td>
+                                            <td scope="row">
+                                                <span th:text="*{user.createDate} != null?*{user.createDate}:'-'"></span>
+                                                <hr/>
+                                                <span th:text="*{user.modifyDate} != null?*{user.modifyDate}:'-'"></span>
+                                            </td>
+                                            <td>
+<!--                                                <a href="#" class="btn btn-primary btn-sm btn-block"><i class="far fa-edit"></i> Edit</a>-->
+<!--                                                <a href="#" class="btn btn-danger btn-sm btn-block mt-2"><i class="fas fa-trash"></i> Delete</a>-->
+                                                <div class="btn-group me-2 row text-center" role="group" aria-label="First group">
+                                                    <div class="col-12 p-2">
+                                                    <a class="btn btn-success btn-block" th:href="@{/user/{id}(id = ${user.id})}"><i class="far fa-edit"></i> Edit</a>
+                                                    </div>
+                                                    <div class="col-12 p-2">
+                                                    <form th:action="@{/user/{id}/delete (id=*{user.id})}" th:method="delete">
+                                                        <button class="btn btn-danger btn-block" type="Submit"><i class="fas fa-trash"></i> Delete</button>
+                                                    </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="col-12">
+                                    <nav aria-label="...">
+                                        <ul class="pagination">
+                                            <li class="page-item " th:classappend="${usersPage.number < 1}?'disabled'">
+                                                <a class="page-link"
+                                                   th:text="Previous"
+                                                   th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}"
+                                                   tabindex="-1" aria-disabled="true">Previous</a>
+                                            </li>
+
+                                            <li th:each="num: ${#numbers.sequence(1,usersPage.totalPages)}"
+                                                th:classappend="${num == usersPage.number+1}? 'active'"
+                                                th:if="${num >= usersPage.number && num <= usersPage.number+2 && usersPage.number!=0 ||
+                                                         num > 0 && num <= usersPage.number + 3 && usersPage.number==0 ||
+                                                         num >= usersPage.number - 1 && usersPage.number==usersPage.totalPages-1}"
+                                                class="page-item">
+                                                <a class="page-link"
+                                                   th:text="${num}"
+                                                   th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}">1</a>
+                                            </li>
+
+                                            <li class="page-item" th:classappend="${usersPage.number+1 >= usersPage.totalPages}?'disabled'">
+                                                <a class="page-link"
+                                                   th:text="Next"
+                                                   th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter})}"
+                                                >Next</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+
+                            </div>
+                            <!-- end card-body1 -->
+
+                            <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="usersTable" class="table table-bordered table-hover display"
                                            style="width:100%">
@@ -185,7 +270,7 @@
                                         </thead>
                                         <tbody>
 <!--                                        <tr th:each="user : ${usersPage.content}">-->
-                                        <tr th:each="user : ${usersPage}">
+                                        <tr th:each="user : ${userList}">
                                             <th scope="row" th:text="*{user.id}">1</th>
                                             <td scope="row" th:text="*{user.login}">User Login</td>
                                             <td scope="row">
@@ -217,7 +302,7 @@
                                 <!-- end table-responsive-->
 
                             </div>
-                            <!-- end card-body-->
+                            <!-- end card-body2-->
 
                         </div>
                         <!-- end card-->
