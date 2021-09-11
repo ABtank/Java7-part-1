@@ -1,4 +1,4 @@
-package ru.abtank.persist.dto;
+package ru.abtank.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

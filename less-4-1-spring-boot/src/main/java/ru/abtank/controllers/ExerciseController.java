@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.abtank.persist.dto.ExerciseDto;
+import ru.abtank.dto.ExerciseDto;
 import ru.abtank.persist.entities.Category;
 import ru.abtank.persist.entities.Character;
 import ru.abtank.persist.entities.Exercise;
@@ -56,9 +56,9 @@ public class ExerciseController {
          System.out.println("/////////ResponseBody//////////");
             ExerciseDto exercise = exerciseRepository.findById(1).map(ExerciseDto:: new).get();
             List<ExerciseDto> exerciseDtos = exerciseRepository.findAll().stream().map(ExerciseDto::new).collect(Collectors.toList());
-            List<ExerciseDto> exerciseDtos2 = exerciseRepository.findAllExercise();
-            System.out.println("/////////ExerciseDto//////////"+exerciseDtos2);
-        return exerciseDtos2;
+//            List<ExerciseDto> exerciseDtos2 = exerciseRepository.findAllExercise();
+//            System.out.println("/////////ExerciseDto//////////"+exerciseDtos2);
+        return exerciseDtos;
     }
 
     @GetMapping
@@ -91,10 +91,11 @@ public class ExerciseController {
     }
 
     @DeleteMapping("{id}/delete")
-    public String deleteExercise(@PathVariable("id") Integer id) {
+    public String deleteExercise(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         LOGGER.info("@DeleteMapping id{}",id);
         exerciseRepository.deleteById(id);
         LOGGER.info("Exercise id={} deleted",id);
+        redirectAttributes.addFlashAttribute("msg", "Success DELETE Exercise");
         return "redirect:/exercise";
     }
 

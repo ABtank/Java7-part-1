@@ -13,10 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.abtank.dto.ExerciseDto;
+import ru.abtank.dto.UserDto;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.entities.User;
 import ru.abtank.persist.repositories.RoleRepository;
-import ru.abtank.persist.repositories.UserRepository;
 import ru.abtank.persist.repositories.UserSpecification;
 import ru.abtank.servises.UserService;
 
@@ -37,8 +38,6 @@ public class UserController {
     private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private UserService userService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -57,22 +56,32 @@ public class UserController {
     ) {
 
         PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(10), direction.isEmpty() ? Sort.Direction.ASC : Sort.Direction.DESC, sort.orElse("id"));
-        Page<User> userPage = userService.findAll(params, pageRequest);
+        Page<UserDto> userPage = userService.findAll(params, pageRequest);
         model.addAttribute("usersPage", userPage);
 
-        List<User> userList = userService.findAll();
+        List<UserDto> userList = userService.findAll();
         model.addAttribute("userList", userList);
-        User user = new User();
         List<Role> roles = roleRepository.findAll();
-        model.addAttribute("user", user);
+        model.addAttribute("user", new User());
         model.addAttribute("roles", roles);
 
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_users");
         LOGGER.info("GET ALL USERS: " + userPage.stream()
-                .map(User::getLogin)
+                .map(UserDto::getLogin)
                 .collect(Collectors.joining(", ")));
         return "users";
+    }
+
+    @GetMapping("/json")
+    @ResponseBody // возвращает json
+    public List <UserDto> userAll(){
+        System.out.println("/////////ResponseBody//////////");
+        UserDto user = userService.findById(1).map(UserDto:: new).get();
+        List<UserDto> userDtos = userService.findAll();
+//            List<userDto> userDtos2 = userRepository.findAlluser();
+//            System.out.println("/////////userDto//////////"+userDtos2);
+        return userDtos;
     }
 
 
@@ -124,12 +133,9 @@ public class UserController {
 
     @GetMapping("/create")
     public String createUser(Model model) {
-        User user = new User();
-        List<Role> roles = roleRepository.findAll();
-        LOGGER.info("ROLES: " + roles);
-        LOGGER.info("CREATE USER: " + user.toString());
-        model.addAttribute("user", user);
-        model.addAttribute("roles", roles);
+        LOGGER.info("CREATE USER");
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("nav_selected", "ADD_NEW");
         return "user";
     }
