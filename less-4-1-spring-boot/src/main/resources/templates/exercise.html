@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+
+<body class="adminbody">
+
+<div id="main">
+    <!-- top bar navigation -->
+    <div th:replace="fragments/nav :: top_bar_navigation"></div>
+    <!-- End Navigation -->
+    <!-- Left Sidebar -->
+    <div th:replace="fragments/sidebar :: left_sidebar"></div>
+    <!-- End Sidebar -->
+
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb-holder">
+                            <h1 class="main-title float-left" th:text="${exercise.name}">Exercise</h1>
+                            <ol class="breadcrumb float-right">
+                                <li class="breadcrumb-item">Home</li>
+                                <li class="breadcrumb-item active">Exercises</li>
+                            </ol>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div th:replace="fragments/message :: msg"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <form th:action="@{/exercise/update}" method="post" th:object="${exercise}"
+                              enctype="multipart/form-data">
+
+
+                            <input th:type="hidden" th:field="*{id}">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Exercise (required)</label>
+                                        <input class="form-control" th:field="*{name}"
+                                               th:errorclass="is-invalid" type="text"
+                                               required/>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Category (required)</label>
+                                        <select th:field="*{category}"
+                                                class="form-control" required>
+                                            <option value=""></option>
+                                            <optgroup label="Category">
+                                                <option th:each="category : ${categories}"
+                                                        th:text="${category.name}"
+                                                        th:value="${category.id}"
+                                                        th:selected="${exercise.category?.equals(category)}"></option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="2"
+                                                  th:field="*{descr}" th:errorclass="is-invalid"
+                                                  type="text"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Character</label>
+                                        <select th:field="*{character}"
+                                                class="form-control" required>
+                                            <option value=""></option>
+                                            <optgroup label="Character">
+                                                <option th:each="character : ${characters}"
+                                                        th:text="${character.name}"
+                                                        th:value="${character.id}"
+                                                        th:selected="${exercise.character?.equals(character)}"></option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Is Cardio</label>
+                                        <select th:field="*{isCardio}"
+                                                class="form-control">
+                                            <option value="false">Not</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row " id="CardioNames">
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>CardioName1</label>
+                                        <input class="form-control" th:field="*{cardioName1}" disabled
+                                               th:errorclass="is-invalid" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>CardioName2</label>
+                                        <input class="form-control" th:field="*{cardioName2}" disabled
+                                               th:errorclass="is-invalid" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label>CardioName3</label>
+                                        <input class="form-control" th:field="*{cardioName3}" disabled
+                                               th:errorclass="is-invalid" type="text"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <button type="button" th:type="submit"
+                                    th:text="*{id} != null ? 'Update Exercise' :'Add Exercise'" class="btn btn-primary">
+                                Add
+                                Exercise
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END content -->
+
+    </div>
+    <!-- END content-page -->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script th:replace="fragments/footer :: core_scripts"></script>
+
+</div>
+<!-- END main -->
+
+<th:block th:replace="fragments/message :: msg_close"></th:block>
+<script>
+    $(document).on('ready', function () {
+        $('#exerciseTable').DataTable();
+
+        $('#isCardio').on('change', function () {
+            if ($(this).val() === 'false') {
+                $('#CardioNames input').prop('disabled', true);
+            } else {
+                $('#CardioNames input').prop('disabled', false);
+            }
+        });
+    });
+</script>
+<!-- END Java Script for this page -->
+
+</body>
+
+</html>

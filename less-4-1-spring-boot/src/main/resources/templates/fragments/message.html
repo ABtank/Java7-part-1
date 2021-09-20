@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="nav">
+
+</nav>
+<div th:fragment="error_message">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="error_message"
+         th:unless="${#fields.errors('all').isEmpty()}">
+        <ul>
+            <li th:each="err : ${#fields.errors('all')}" th:text="${err}"/>
+        </ul>
+        <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+
+<div th:fragment="msg">
+    <div class="alert alert-success alert-dismissible fade show" id="msg" role="alert" th:if="${msg}">
+        <strong>Success!</strong> <span th:text="${msg}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+
+    <div class="alert alert-danger alert-dismissible fade show" id="exception" role="alert" th:if="${exception}">
+        <strong>ALERT!</strong> <span th:text="${exception}"></span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+</div>
+
+<th:block th:fragment="msg_close">
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $("#msg").fadeOut('slow');
+                $("#exception").fadeOut('slow');
+            }, 5000);
+        })
+    </script>
+</th:block>
+</body>
+</html>

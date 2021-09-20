@@ -1,0 +1,36 @@
+server:
+  port: 8189
+  servlet:
+    context-path: /fitness
+#H2
+#spring:
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:mydatabase;MODE=PostgreSQL
+#    username: sa
+#    password:
+#  h2:console:
+#    enabled: true
+#    settings:
+#      web-allow-others: false
+
+#  PostgreSQL
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/fitness
+    username: postgres
+    password: 123
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  #  Hibernate
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        ddl-auto: validate
