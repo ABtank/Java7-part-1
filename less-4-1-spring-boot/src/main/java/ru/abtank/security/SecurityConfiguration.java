@@ -49,7 +49,7 @@ public class SecurityConfiguration {
 
     //    определяем области доступа через внутренний клас (можно и без него через наследования напрямую)
     @Configuration
-    @Order(1) //порядок загрузки
+    @Order(2) //порядок загрузки
     public static class UiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -74,7 +74,7 @@ public class SecurityConfiguration {
     // пока не получается чтоб работали оба адаптера разом.. Кто первый тот и работает )))
     //    настройка области доступак к REST API
     @Configuration
-    @Order(2)
+    @Order(1)
     public static class APIWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {

@@ -1,0 +1,29 @@
+POST http://localhost:8189/fitness/api/v1/exercise
+Content-Type: application/json
+Authorization: Basic abtank 123
+
+{
+  "name": "test",
+  "descr": null,
+  "isCardio": false,
+  "cardioName1": null,
+  "cardioName2": null,
+  "cardioName3": null,
+  "category": "Ноги",
+  "character": "Локальный",
+  "creator": "abtank",
+  "createDate": "2021-09-03T23:44:52.937+00:00"
+}
+###
+
+DELETE http://localhost:8189/fitness/api/v1/exercise/123
+Content-Type: application/json
+Authorization: Basic abtank 123
+
+
+###
+GET http://localhost:8189/fitness/api/v1/exercise
+Authorization: Basic abtank 123
+###
+GET http://localhost:8189/fitness/api/v1/exercise/123
+Authorization: Basic abtank 123

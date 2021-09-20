@@ -16,6 +16,7 @@ import ru.abtank.persist.entities.Exercise;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.entities.User;
 import ru.abtank.persist.repositories.*;
+import ru.abtank.servises.ExerciseService;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -27,48 +28,55 @@ import java.util.stream.Collectors;
 @RequestMapping("/exercise")
 public class ExerciseController {
     private ExerciseRepository exerciseRepository;
+    private ExerciseService exerciseService;
     private CategoryRepository categoryRepository;
     private CharacterRepository characterRepository;
     private UserRepository userRepository;
     private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
+    public void setExerciseService(ExerciseService exerciseService) {
+        this.exerciseService = exerciseService;
+    }
+
+    @Autowired
     public void setExerciseRepository(ExerciseRepository exerciseRepository) {
         this.exerciseRepository = exerciseRepository;
     }
+
     @Autowired
     public void setCategoryRepository(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
+
     @Autowired
     public void setCharacterRepository(CharacterRepository characterRepository) {
         this.characterRepository = characterRepository;
     }
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-//    работа с DTO
+    //    работа с DTO
     @GetMapping("/json")
     @ResponseBody // возвращает json
-    public List <ExerciseDto> exerciseAll(){
-         System.out.println("/////////ResponseBody//////////");
-            ExerciseDto exercise = exerciseRepository.findById(1).map(ExerciseDto:: new).get();
-            List<ExerciseDto> exerciseDtos = exerciseRepository.findAll().stream().map(ExerciseDto::new).collect(Collectors.toList());
-//            List<ExerciseDto> exerciseDtos2 = exerciseRepository.findAllExercise();
-//            System.out.println("/////////ExerciseDto//////////"+exerciseDtos2);
+    public List<ExerciseDto> exerciseAll() {
+        System.out.println("/////////ResponseBody//////////");
+        ExerciseDto exercise = exerciseService.findByIdDto(1).orElseThrow(() -> new NotFoundException(Exercise.class.getSimpleName(), 1, "not Found!"));
+        List<ExerciseDto> exerciseDtos = exerciseService.findAllDto();
         return exerciseDtos;
     }
 
     @GetMapping
-    public String exerciseAll(Model model){
-        List<Exercise> exercises = exerciseRepository.findAll();
+    public String exerciseAll(Model model) {
+        List<Exercise> exercises = exerciseService.findAll();
         List<Category> categories = categoryRepository.findAll();
         List<Character> characters = characterRepository.findAll();
         Exercise exercise = new Exercise();
-        LOGGER.info("//////////////"+exercises.get(0));
-        model.addAttribute("nav_selected","nav_exercises");
+        LOGGER.info("//////////////" + exercises.get(0));
+        model.addAttribute("nav_selected", "nav_exercises");
         model.addAttribute("exercise", exercise);
         model.addAttribute("exercises", exercises);
         model.addAttribute("categories", categories);
@@ -78,7 +86,7 @@ public class ExerciseController {
 
     @GetMapping("/{id}")
     public String editUser(@PathVariable("id") Integer id, Model model) {
-        Exercise exercise = exerciseRepository.findById(id).orElseThrow(()->new NotFoundException(Exercise.class.getSimpleName(), id,"not Found!"));
+        Exercise exercise = exerciseService.findById(id).orElseThrow(() -> new NotFoundException(Exercise.class.getSimpleName(), id, "not Found!"));
         List<Category> categories = categoryRepository.findAll();
         List<Character> characters = characterRepository.findAll();
         LOGGER.info("EDIT Exercise: " + exercise.toString());
@@ -92,9 +100,9 @@ public class ExerciseController {
 
     @DeleteMapping("{id}/delete")
     public String deleteExercise(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-        LOGGER.info("@DeleteMapping id{}",id);
-        exerciseRepository.deleteById(id);
-        LOGGER.info("Exercise id={} deleted",id);
+        LOGGER.info("@DeleteMapping id{}", id);
+        exerciseService.deleteById(id);
+        LOGGER.info("Exercise id={} deleted", id);
         redirectAttributes.addFlashAttribute("msg", "Success DELETE Exercise");
         return "redirect:/exercise";
     }
@@ -102,28 +110,28 @@ public class ExerciseController {
     @PostMapping("/update")
     public String updateExercise(@ModelAttribute("exercise") Exercise exercise, BindingResult bindingResult, Principal principal, RedirectAttributes redirectAttributes) {
         String msg;
-        LOGGER.info(principal.getName()+" START UPDATE OR INSERT EXERCISE: " + exercise.toString());
-        User creator = userRepository.findByLogin(principal.getName()).orElseThrow(()->new NotFoundException("creator not Found!"));
+        LOGGER.info(principal.getName() + " START UPDATE OR INSERT EXERCISE: " + exercise.toString());
+        User creator = userRepository.findByLogin(principal.getName()).orElseThrow(() -> new NotFoundException("creator not Found!"));
         if (bindingResult.hasErrors()) {
-            return (exercise.getId() != null)?"redirect:/exercise"+exercise.getId():"redirect:/exercise";
+            return (exercise.getId() != null) ? "redirect:/exercise" + exercise.getId() : "redirect:/exercise";
         }
 //        Проверка на уникальность имени
         Specification<Exercise> spec = ExerciseSpecification.trueLiteral();
         spec = spec.and(ExerciseSpecification.findByName(exercise.getName()));
-        List<Exercise> chekEquals = exerciseRepository.findAll(spec);
+        List<Exercise> chekEquals = exerciseService.findAll(spec);
         LOGGER.info("LIST EXERCISES {}", chekEquals.stream().map(Exercise::getName).collect(Collectors.joining(", ")));
-        List <Integer> checkId = chekEquals.stream().map(Exercise::getId).collect(Collectors.toList());
+        List<Integer> checkId = chekEquals.stream().map(Exercise::getId).collect(Collectors.toList());
         checkId.remove(exercise.getId());
         LOGGER.info("!chekEquals.isEmpty() {} {}", !checkId.isEmpty(), checkId);
-        if(!checkId.isEmpty()){
+        if (!checkId.isEmpty()) {
             msg = "Exercise already exists";
             redirectAttributes.addFlashAttribute("exception", msg);
-            return (exercise.getId() != null)?"redirect:/exercise/"+exercise.getId():"redirect:/exercise";
+            return (exercise.getId() != null) ? "redirect:/exercise/" + exercise.getId() : "redirect:/exercise";
         }
 
         exercise.setCreator(creator);
-        msg = (exercise.getId() != null) ? creator.getLogin()+" "+creator.getId()+" Susses update Exercise " : creator.getLogin()+" "+creator.getId()+" Susses create exercise ";
-        exerciseRepository.save(exercise);
+        msg = (exercise.getId() != null) ? creator.getLogin() + " " + creator.getId() + " Susses update Exercise " : creator.getLogin() + " " + creator.getId() + " Susses create exercise ";
+        exerciseService.save(exercise);
         msg += exercise.getName();
         redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/exercise";
