@@ -222,7 +222,7 @@
                                 <div class="col-12">
                                     <nav aria-label="...">
                                         <ul class="pagination">
-                                            <li class="page-item " th:classappend="${usersPage.number < 1}?'disabled'">
+                                            <li class="page-item " th:classappend="${usersPage.isFirst()}?'disabled'">
                                                 <a class="page-link"
                                                    th:text="Previous"
                                                    th:href="@{user(page=${usersPage.number},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}"
@@ -240,7 +240,7 @@
                                                    th:href="@{user(page=${num},size=${usersPage.size},login_filter=${param.login_filter},email_filter=${param.email_filter},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter})}">1</a>
                                             </li>
 
-                                            <li class="page-item" th:classappend="${usersPage.number+1 >= usersPage.totalPages}?'disabled'">
+                                            <li class="page-item" th:classappend="${usersPage.isLast()}?'disabled'">
                                                 <a class="page-link"
                                                    th:text="Next"
                                                    th:href="@{user(page=${usersPage.number+2},size=${usersPage.size},check_email_filter=${param.check_email_filter},check_login_filter=${param.check_login_filter},login_filter=${param.login_filter},email_filter=${param.email_filter})}"

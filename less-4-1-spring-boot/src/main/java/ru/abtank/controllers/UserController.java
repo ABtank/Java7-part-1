@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.abtank.dto.ExerciseDto;
 import ru.abtank.dto.UserDto;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.entities.User;
