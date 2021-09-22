@@ -25,5 +25,5 @@ Authorization: Basic abtank 123
 GET http://localhost:8189/fitness/api/v1/exercise
 Authorization: Basic abtank 123
 ###
-GET http://localhost:8189/fitness/api/v1/exercise/123
+GET http://localhost:8189/fitness/api/v1/exercise/2
 Authorization: Basic abtank 123

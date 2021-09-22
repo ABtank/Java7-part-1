@@ -46,6 +46,8 @@ public class RoleController {
 
         Page<Role> rolePage = roleRepository.findAll(pageRequest);
         model.addAttribute("rolesPage", rolePage);
+        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("role", new Role());
 
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_roles");
@@ -66,7 +68,7 @@ public class RoleController {
     }
 
     @PostMapping("/update")
-    @Secured("ADMIN")
+    @Secured("ROLE_ADMIN")
     public String updateRole(@ModelAttribute("role") @Valid Role role, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         LOGGER.info("START UPDATE OR INSERT ROLE: " + role.toString());
         if (bindingResult.hasErrors()) {

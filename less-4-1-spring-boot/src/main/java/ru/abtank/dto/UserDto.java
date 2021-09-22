@@ -16,8 +16,8 @@ public class UserDto {
     private Integer id;
     private String login;
     private String email;
-    private Set<String> roles;
-    private String creator;
+    private Set<Role> roles;
+    private User creator;
     private Date createDate;
     private Date modifyDate;
 
@@ -25,8 +25,8 @@ public class UserDto {
         this.id = user.getId();
         this.login = user.getLogin();
         this.email = user.getEmail();
-        this.roles = user.getRoles().stream().map(Role :: getName).collect(Collectors.toSet());
-        this.creator = user.getCreator().getLogin();
+        this.roles = user.getRoles();
+        this.creator = user.getCreator();
         this.createDate = user.getCreateDate();
         this.modifyDate = user.getModifyDate();
     }

@@ -75,6 +75,13 @@
                                 <span class="label radius-circle bg-primary float-right" th:text="${exercises_count}">9</span>
                                 Упражнения</a>
                         </li>
+                        <li th:classappend="${nav_selected} == 'nav_roles' ? active :' '">
+                            <a th:classappend="${nav_selected} == 'nav_roles' ? active :' '"
+                               th:selected="${nav_selected} == 'nav_roles'"
+                               th:href="@{/role}">
+                                <span class="label radius-circle bg-primary float-right" th:text="${roles_count}">9</span>
+                                Роли</a>
+                        </li>
                     </ul>
                 </li>
 

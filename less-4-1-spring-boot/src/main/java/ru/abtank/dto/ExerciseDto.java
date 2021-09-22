@@ -2,7 +2,10 @@ package ru.abtank.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.abtank.persist.entities.Category;
+import ru.abtank.persist.entities.Character;
 import ru.abtank.persist.entities.Exercise;
+import ru.abtank.persist.entities.User;
 
 import java.util.Date;
 

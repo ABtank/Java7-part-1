@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+
+<body class="adminbody">
+
+<div id="main">
+    <!-- top bar navigation -->
+    <div th:replace="fragments/nav :: top_bar_navigation"></div>
+    <!-- End Navigation -->
+    <!-- Left Sidebar -->
+    <div th:replace="fragments/sidebar :: left_sidebar"></div>
+    <!-- End Sidebar -->
+
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb-holder">
+                            <h1 class="main-title float-left" th:text="${role.name}">role</h1>
+                            <ol class="breadcrumb float-right">
+                                <li class="breadcrumb-item">Home</li>
+                                <li class="breadcrumb-item active">roles</li>
+                            </ol>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div th:replace="fragments/message :: msg"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <form th:action="@{/role/update}" method="post" th:object="${role}"
+                              enctype="multipart/form-data">
+
+
+                            <input th:type="hidden" th:field="*{id}">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>role (required)</label>
+                                        <input class="form-control" th:field="*{name}"
+                                               th:errorclass="is-invalid" type="text"
+                                               required/>
+                                    </div>
+                                </div>
+
+                            </div>
+<!--                            <div class="row">-->
+<!--                                <div class="col-lg-12">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label>Description</label>-->
+<!--                                        <textarea class="form-control" rows="2"-->
+<!--                                                  th:field="*{descr}" th:errorclass="is-invalid"-->
+<!--                                                  type="text"></textarea>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>                            -->
+
+
+
+                            <button type="button" th:type="submit"
+                                    th:text="*{id} != null ? 'Update Role' :'Add Role'" class="btn btn-primary">
+                                Add
+                                role
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END content -->
+
+    </div>
+    <!-- END content-page -->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script th:replace="fragments/footer :: core_scripts"></script>
+
+</div>
+<!-- END main -->
+
+<th:block th:replace="fragments/message :: msg_close"></th:block>
+<script>
+    $(document).on('ready', function () {
+
+    });
+</script>
+<!-- END Java Script for this page -->
+
+</body>
+
+</html>

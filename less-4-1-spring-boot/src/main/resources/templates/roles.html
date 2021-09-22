@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:replace="fragments/head :: head"></div>
+
+<body class="adminbody">
+
+<div id="main">
+    <!-- top bar navigation -->
+    <div th:replace="fragments/nav :: top_bar_navigation"></div>
+    <!-- End Navigation -->
+    <!-- Left Sidebar -->
+    <div th:replace="fragments/sidebar :: left_sidebar"></div>
+    <!-- End Sidebar -->
+
+
+    <div class="content-page">
+
+        <!-- Start content -->
+        <div class="content">
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="breadcrumb-holder">
+                            <h1 class="main-title float-left">DataTables</h1>
+                            <ol class="breadcrumb float-right">
+                                <li class="breadcrumb-item">Home</li>
+                                <li class="breadcrumb-item active">DataTables</li>
+                            </ol>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+
+                <div class="row">
+                    <div th:replace="fragments/message :: msg"></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="card mb-3">
+                            <div class="card-header">
+
+                                <span class="pull-right">
+                                <button class="btn btn-primary btn-sm" data-toggle="modal"
+                                        data-target="#modal_add_role">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i> Add new role</button>
+                                </span>
+                                <div class="modal fade custom-modal" tabindex="-1" role="dialog"
+                                     aria-labelledby="modal_add_role" aria-hidden="true" id="modal_add_role">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+
+                                            <form th:action="@{/role/update}" method="post" th:object="${role}"
+                                                  enctype="multipart/form-data">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Add new role</h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        <span class="sr-only">Close</span>
+                                                    </button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <input th:type="hidden" th:field="*{id}">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <label>Role (required)</label>
+                                                                <input class="form-control" th:field="*{name}" th:errorclass="is-invalid" type="text"
+                                                                       required/>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" th:type="submit" class="btn btn-primary">Add
+                                                        role
+                                                    </button>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <h3><i class="fas fa-table"></i>roles table</h3>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="roleTable" class="table table-bordered table-hover display"
+                                           style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>id</th>
+                                            <th>role</th>
+                                            <th sec:authorize="hasRole('ADMIN')">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="role : ${roles}">
+                                            <th th:text="*{role.id}">id</th>
+                                            <th th:text="*{role.name}">role</th>
+                                            <td scope="row" class="text-center" style="width: 10px;"
+                                                sec:authorize="hasRole('ADMIN')">
+                                                <div class="btn-group me-2" role="group" aria-label="First group">
+                                                    <a class="btn btn-success"
+                                                       th:href="@{/role/{id}(id = ${role.id})}"><i
+                                                            class="bi bi-pencil-square"></i></a>
+                                                    <form th:action="@{/role/{id}/delete (id=*{role.id})}" th:method="delete">
+                                                        <button class="btn btn-danger" type="Submit"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- end table-responsive-->
+
+                            </div>
+                            <!-- end card-body-->
+
+                        </div>
+                        <!-- end card-->
+
+                    </div>
+
+                </div>
+                <!-- end row-->
+
+            </div>
+            <!-- END container-fluid -->
+
+        </div>
+        <!-- END content -->
+
+    </div>
+    <!-- END content-page -->
+
+    <footer th:replace="fragments/footer :: footer"></footer>
+
+    <script th:replace="fragments/footer :: core_scripts"></script>
+
+</div>
+<!-- END main -->
+
+<script th:replace="fragments/footer :: datatables_scripts"></script>
+<script th:replace="fragments/message :: msg_close"></script>
+
+<script>
+    $(document).on('ready', function () {
+        $('#roleTable').DataTable();
+
+        $('#isCardio').on('change', function () {
+            if(!Boolean($(this).val())) {
+                $('#CardioNames input').prop('disabled', true);
+            }else{
+                $('#CardioNames input').prop('disabled', false);
+            }
+        });
+    });
+</script>
+<!-- END Java Script for this page -->
+
+</body>
+
+</html>

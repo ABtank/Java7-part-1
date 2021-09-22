@@ -74,10 +74,9 @@ public class ExerciseController {
         List<Exercise> exercises = exerciseService.findAll();
         List<Category> categories = categoryRepository.findAll();
         List<Character> characters = characterRepository.findAll();
-        Exercise exercise = new Exercise();
         LOGGER.info("//////////////" + exercises.get(0));
         model.addAttribute("nav_selected", "nav_exercises");
-        model.addAttribute("exercise", exercise);
+        model.addAttribute("exercise",  new Exercise());
         model.addAttribute("exercises", exercises);
         model.addAttribute("categories", categories);
         model.addAttribute("characters", characters);
