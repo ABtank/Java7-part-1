@@ -63,6 +63,7 @@ public class SecurityConfiguration {
 //                    .antMatchers("/").anonymous()  // доступ для всех не авторизованных
 //        .antMatchers("/user/**").authenticated()  // всем авторизованным
                     .antMatchers("/exercise/**").authenticated()
+                    .antMatchers("/mode/**").authenticated()
                     .antMatchers("/user/**").hasRole("ADMIN")  // ограничение по роли
                     .antMatchers("/role/**").hasAnyRole("ADMIN", "USER")  // ограничение по роли
                     .and()

@@ -25,4 +25,8 @@ public final class UserSpecification {
         return (root,quary,builder) -> builder.like(root.get("email"), "%"+email+"%");
     }
 
+    public static Specification<User> idNotEqual(Integer id){
+        return (root,quary,builder) -> builder.notEqual(root.get("id"), id);
+    }
+
 }

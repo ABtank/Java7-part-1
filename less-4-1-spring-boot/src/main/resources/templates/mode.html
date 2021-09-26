@@ -23,10 +23,10 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="breadcrumb-holder">
-                            <h1 class="main-title float-left" th:text="${role.name}">role</h1>
+                            <h1 class="main-title float-left" th:text="${mode.name}">mode</h1>
                             <ol class="breadcrumb float-right">
                                 <li class="breadcrumb-item">Home</li>
-                                <li class="breadcrumb-item active">roles</li>
+                                <li class="breadcrumb-item active">modes</li>
                             </ol>
                             <div class="clearfix"></div>
                         </div>
@@ -36,7 +36,7 @@
                 <div class="row">
                     <div th:replace="fragments/message :: msg"></div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <form th:action="@{/role/update}" method="post" th:object="${role}"
+                        <form th:action="@{/mode/update}" method="post" th:object="${mode}"
                               enctype="multipart/form-data">
 
 
@@ -44,34 +44,42 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label>role (required)</label>
-                                        <input class="form-control" th:field="*{name}"
-                                               th:errorclass="is-invalid" type="text"
+                                        <label>mode (required)</label>
+                                        <input class="form-control" th:field="*{name}" th:errorclass="is-invalid" type="text"
                                                required/>
                                         <small id="nameError" class="form-text alert-danger"
                                                th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Validation error
                                         </small>
                                     </div>
                                 </div>
-
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Is Cardio</label>
+                                        <select th:field="*{isStart}"
+                                                class="form-control" >
+                                            <option value="false">Not</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-<!--                            <div class="row">-->
-<!--                                <div class="col-lg-12">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label>Description</label>-->
-<!--                                        <textarea class="form-control" rows="2"-->
-<!--                                                  th:field="*{descr}" th:errorclass="is-invalid"-->
-<!--                                                  type="text"></textarea>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>                            -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea class="form-control" rows="2"
+                                                  th:field="*{descr}"
+                                                  type="text"></textarea>
+                                    </div>
+                                </div>
+                            </div>
 
 
 
                             <button type="button" th:type="submit"
-                                    th:text="*{id} != null ? 'Update Role' :'Add Role'" class="btn btn-primary">
+                                    th:text="*{id} != null ? 'Update mode' :'Add mode'" class="btn btn-primary">
                                 Add
-                                role
+                                mode
                             </button>
                         </form>
                     </div>

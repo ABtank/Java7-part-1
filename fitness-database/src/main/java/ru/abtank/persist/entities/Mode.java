@@ -22,7 +22,7 @@ public class Mode implements Serializable {
     private String name;
 
     @Column(name = "is_start")
-    private Boolean is_start;
+    private Boolean isStart;
 
     @Column(name = "descr")
     private String descr;

@@ -192,7 +192,7 @@
                                             </td>
                                             <td>
                                                 <p th:each="role : *{user.roles}">
-                                                    <span th:text="*{role}">User role</span>
+                                                    <span th:text="*{role.name}">User role</span>
                                                 </p>
                                             </td>
                                             <td scope="row">
@@ -278,7 +278,7 @@
                                             </td>
                                             <td scope="row">
                                                 <p th:each="role : *{user.roles}">
-                                                    <span th:text="*{role}">User role</span>
+                                                    <span th:text="*{role.name}">User role</span>
                                                 </p>
                                             </td>
                                             <td scope="row">

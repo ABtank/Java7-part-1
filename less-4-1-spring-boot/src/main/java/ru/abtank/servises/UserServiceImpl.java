@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
+    private RoleRepository roleService;
     private PasswordEncoder passwordEncoder;
     private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService{
         this.passwordEncoder = passwordEncoder;
     }
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public void setRoleRepository(RoleRepository roleService) {
+        this.roleService = roleService;
     }
 
     @Autowired

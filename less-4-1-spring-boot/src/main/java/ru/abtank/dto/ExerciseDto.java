@@ -20,9 +20,9 @@ public class ExerciseDto {
     private String cardioName1;
     private String cardioName2;
     private String cardioName3;
-    private String category;
-    private String character;
-    private String creator;
+    private Category category;
+    private Character character;
+    private User creator;
     private Date createDate;
 
     public ExerciseDto(Exercise exercise) {
@@ -33,9 +33,9 @@ public class ExerciseDto {
         this.cardioName1 = exercise.getCardioName1();
         this.cardioName2 = exercise.getCardioName2();
         this.cardioName3 = exercise.getCardioName3();
-        this.category = exercise.getCategory().getName();
-        this.character = exercise.getCharacter().getName();
-        this.creator = exercise.getCreator().getLogin();
+        this.category = exercise.getCategory();
+        this.character = exercise.getCharacter();
+        this.creator = exercise.getCreator();
         this.createDate = exercise.getCreateDate();
     }
 }

@@ -7,7 +7,6 @@ import ru.abtank.persist.entities.User;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor

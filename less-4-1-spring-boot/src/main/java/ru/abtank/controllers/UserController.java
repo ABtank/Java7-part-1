@@ -16,8 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.abtank.dto.UserDto;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.entities.User;
-import ru.abtank.persist.repositories.RoleRepository;
 import ru.abtank.persist.repositories.UserSpecification;
+import ru.abtank.servises.RoleService;
 import ru.abtank.servises.UserService;
 
 import javax.validation.Valid;
@@ -35,13 +35,22 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    private UserService userService;
+    private PasswordEncoder passwordEncoder;
+    private RoleService roleService;
 
     @Autowired
-    private UserService userService;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
     @Autowired
-    private RoleRepository roleRepository;
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
+    }
 
     //весь список юзеров
     @GetMapping
@@ -60,7 +69,7 @@ public class UserController {
 
         List<UserDto> userList = userService.findAll();
         model.addAttribute("userList", userList);
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = roleService.findAll();
         model.addAttribute("user", new User());
         model.addAttribute("roles", roles);
 
@@ -89,7 +98,7 @@ public class UserController {
         User user = userService.findById(id).orElseThrow(() -> new NotFoundException(User.class.getSimpleName(), id, "not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
         LOGGER.info("CREATOR USER: " + user.getCreator().getLogin());
-        List<Role> roles = roleRepository.findAll();
+        List<Role> roles = roleService.findAll();
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "nav_users");
@@ -108,8 +117,10 @@ public class UserController {
         Specification<User> spec = UserSpecification.trueLiteral();
         spec = spec.and(UserSpecification.findBylogin(user.getLogin()));
         spec = spec.or(UserSpecification.findByEmail(user.getEmail()));
-        List<Integer> chekEquals = userService.findAll(spec).stream().map(User::getId).collect(Collectors.toList());
-        chekEquals.remove(user.getId());
+        if(user.getId() != null){
+            spec = spec.and(UserSpecification.idNotEqual(user.getId()));
+        }
+        List<User> chekEquals = userService.findAll(spec);
         LOGGER.info("!chekEquals.isEmpty() {}", !chekEquals.isEmpty());
         if (!chekEquals.isEmpty()) {
             msg = "Login or email already exists";
@@ -134,7 +145,7 @@ public class UserController {
     public String createUser(Model model) {
         LOGGER.info("CREATE USER");
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("roles", roleService.findAll());
         model.addAttribute("nav_selected", "ADD_NEW");
         return "user";
     }
