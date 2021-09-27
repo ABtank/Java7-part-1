@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.abtank.dto.RoleDto;
 import ru.abtank.dto.UserDto;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.entities.User;
@@ -24,10 +25,7 @@ import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -69,7 +67,7 @@ public class UserController {
 
         List<UserDto> userList = userService.findAll();
         model.addAttribute("userList", userList);
-        List<Role> roles = roleService.findAll();
+        Set<RoleDto> roles = roleService.findAllDto();
         model.addAttribute("user", new User());
         model.addAttribute("roles", roles);
 
@@ -98,7 +96,7 @@ public class UserController {
         User user = userService.findById(id).orElseThrow(() -> new NotFoundException(User.class.getSimpleName(), id, "not Found!"));
         LOGGER.info("EDIT USER: " + user.toString());
         LOGGER.info("CREATOR USER: " + user.getCreator().getLogin());
-        List<Role> roles = roleService.findAll();
+        Set<RoleDto> roles = roleService.findAllDto();
         model.addAttribute("roles", roles);
         model.addAttribute("user", user);
         model.addAttribute("nav_selected", "nav_users");

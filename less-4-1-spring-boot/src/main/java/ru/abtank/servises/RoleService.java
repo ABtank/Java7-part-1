@@ -17,5 +17,5 @@ public interface RoleService {
     void deleteById(Integer id);
     List<Role>findAll(Specification<Role> spec);
     void save(Role role);
-    Role saveOrUpdate(Role role);
+    void saveOrUpdate(RoleDto roleDto);
 }

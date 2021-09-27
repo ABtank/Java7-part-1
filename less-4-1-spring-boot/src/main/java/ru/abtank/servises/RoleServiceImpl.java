@@ -4,6 +4,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.abtank.controllers.NotFoundException;
 import ru.abtank.dto.RoleDto;
 import ru.abtank.persist.entities.Role;
 import ru.abtank.persist.repositories.RoleRepository;
@@ -64,7 +65,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role saveOrUpdate(Role role) {
-        return roleRepository.save(role);
+    public void saveOrUpdate(RoleDto roleDto) {
+        Role role = (roleDto.getId() != null) ? roleRepository.findById(roleDto.getId())
+                .orElseThrow(NotFoundException::new) : new Role();
+        role.setName(roleDto.getName());
+        roleRepository.save(role);
     }
 }

@@ -3,22 +3,19 @@ package ru.abtank.controllers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.abtank.persist.entities.Role;
+import ru.abtank.dto.RoleDto;
 import ru.abtank.servises.RoleService;
 
 import javax.validation.Valid;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/role") // localhost:8080/fitness/user
@@ -35,21 +32,10 @@ public class RoleController {
 
     //весь список юзеров
     @GetMapping
-    public String allRoles(Model model,
-                           @RequestParam("page") Optional<Integer> page,
-                           @RequestParam("size") Optional<Integer> size,
-                           @RequestParam("sort") Optional<String> sort,
-                           @RequestParam("direction") Optional<String> direction
-    ) {
+    public String allRoles(Model model) {
 
-
-//        c пагинацией
-        PageRequest pageRequest = PageRequest.of(page.orElse(1) - 1, size.orElse(5), direction.isEmpty() ? Sort.Direction.ASC : Sort.Direction.DESC, sort.orElse("id"));
-
-//        Page<Role> rolePage = roleService.findAll(pageRequest);
-//        model.addAttribute("rolesPage", rolePage);
-        model.addAttribute("roles", roleService.findAll());
-        model.addAttribute("role", new Role());
+        model.addAttribute("roles", roleService.findAllDto());
+        model.addAttribute("role", new RoleDto());
 
         model.addAttribute("time", getDate());
         model.addAttribute("nav_selected", "nav_roles");
@@ -60,37 +46,37 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public String editRole(@PathVariable("id") Integer id, Model model) throws SQLException {
-        Role role = roleService.findById(id).orElseThrow(()->new NotFoundException(Role.class.getSimpleName(), id," not Found!"));
-        LOGGER.info("EDIT ROLE: " + role.toString());
-        model.addAttribute("role", role);
+        RoleDto roleDto = roleService.findByIdDto(id).orElseThrow(()->new NotFoundException("Role", id," not Found!"));
+        LOGGER.info("EDIT ROLE: " + roleDto.toString());
+        model.addAttribute("role", roleDto);
         model.addAttribute("nav_selected", "nav_roles");
         return "role";
     }
 
     @PostMapping("/update")
     @Secured("ROLE_ADMIN")
-    public String updateRole(@ModelAttribute("role") @Valid Role role, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        LOGGER.info("START UPDATE OR INSERT ROLE: " + role.toString());
+    public String updateRole(@ModelAttribute("role") @Valid RoleDto roleDto, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        LOGGER.info("START UPDATE OR INSERT ROLE: " + roleDto.toString());
         if (bindingResult.hasErrors()) {
+            model.addAttribute("role", roleDto);
             return "role";
         }
-        if (!roleService.findByName(role.getName()).isEmpty()) {
+        if (!roleService.findByName(roleDto.getName()).isEmpty()) {
             bindingResult.rejectValue("name", "error.name", "такая роль уже есть");
-            model.addAttribute("role", role);
+            model.addAttribute("role", roleDto);
             return "role";
         }
-        String msg = (role.getId() != null) ? "Susses update role " : "Susses create role ";
-        roleService.save(role);
-        msg += role.getName();
+        String msg = (roleDto.getId() != null) ? "Susses update role " : "Susses create role ";
+        roleService.saveOrUpdate(roleDto);
+        msg += roleDto.getName();
         redirectAttributes.addFlashAttribute("msg", msg);
         return "redirect:/role";
     }
 
     @GetMapping("/create")
     public String createRole(Model model) {
-        Role role = new Role();
-        LOGGER.info("CREATE ROLE: " + role.toString());
-        model.addAttribute("role", role);
+        LOGGER.info("CREATE ROLE: ");
+        model.addAttribute("role", new RoleDto());
         model.addAttribute("nav_selected", "ADD_NEW");
         return "role";
     }
